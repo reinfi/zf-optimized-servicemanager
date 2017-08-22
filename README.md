@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/reinfi/zf-optimized-servicemanager.svg?branch=master)](https://travis-ci.org/reinfi/zf-optimized-servicemanager)
+[![Code Climate](https://codeclimate.com/github/reinfi/zf-optimized-servicemanager/badges/gpa.svg)](https://codeclimate.com/github/reinfi/zf-optimized-servicemanager)
+[![Coverage Status](https://coveralls.io/repos/github/reinfi/zf-optimized-servicemanager/badge.svg?branch=master)](https://coveralls.io/github/reinfi/zf-optimized-servicemanager?branch=master)
+
 Generate an optimized service manager for zend framework.
 
 1. [Installation](#installation)
