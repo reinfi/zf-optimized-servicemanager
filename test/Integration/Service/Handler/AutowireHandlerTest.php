@@ -13,6 +13,8 @@ use Reinfi\OptimizedServiceManager\Service\Handler\AutowireHandler;
 use Reinfi\OptimizedServiceManager\Service\Service1;
 use Reinfi\OptimizedServiceManager\Service\Service2;
 use Reinfi\OptimizedServiceManager\Service\Service3;
+use Reinfi\OptimizedServiceManager\Service\Service4;
+use Reinfi\OptimizedServiceManager\Service\Service5;
 use Reinfi\OptimizedServiceManager\Types\AutoWire;
 
 /**
@@ -57,6 +59,42 @@ class AutowireHandlerTest extends AbstractIntegrationTest
         $this->assertContains(
             sprintf(
                 '$this->get(\'%s\')', Service3::class
+            ),
+            $method->getMethodBody()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itResolvesAutowireOfAbstractFactoryService()
+    {
+        $serviceManager = $this->getServiceManager(
+            require __DIR__ . '/../../../resources/config.php'
+        );
+
+        /** @var AutowireHandler $handler */
+        $handler = $serviceManager->get(AutowireHandler::class);
+
+        $type = new AutoWire(Service5::class);
+
+        $method = $handler->handle($type);
+
+        $this->assertEquals(
+            Service5::class,
+            $method->getClassName()
+        );
+
+        $this->assertCount(
+            3,
+            $method->getMethodBody(),
+            'There should be three method body parts'
+        );
+
+        $this->assertContains(
+            sprintf(
+                '$this->container->get(\'%s\')',
+                Service4::class
             ),
             $method->getMethodBody()
         );

@@ -2,13 +2,13 @@
 
 namespace Reinfi\OptimizedServiceManager\Service\Handler;
 
-use Psr\Container\ContainerInterface;
 use Reinfi\DependencyInjection\Injection\AutoWiring;
 use Reinfi\DependencyInjection\Injection\AutoWiringPluginManager;
 use Reinfi\DependencyInjection\Injection\InjectionInterface;
 use Reinfi\DependencyInjection\Service\AutoWiring\ResolverService;
 use Reinfi\OptimizedServiceManager\Model\InstantiationMethod;
 use Reinfi\OptimizedServiceManager\Types\TypeInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @package Reinfi\OptimizedServiceManager\Service\Handler
@@ -21,17 +21,17 @@ class AutowireHandler extends AbstractHandler
     protected $resolverService;
 
     /**
-     * @var ContainerInterface
+     * @var ServiceManager
      */
     protected $container;
 
     /**
      * @param ResolverService $resolverService
-     * @param ContainerInterface $container
+     * @param ServiceManager $container
      */
     public function __construct(
         ResolverService $resolverService,
-        ContainerInterface $container
+        ServiceManager $container
     ) {
         $this->resolverService = $resolverService;
         $this->container = $container;
@@ -83,6 +83,13 @@ class AutowireHandler extends AbstractHandler
 
         $serviceNameProperty->setAccessible(true);
         $serviceName = $serviceNameProperty->getValue($injection);
+
+        // If service is created via abstract factory we need to get it from underlying container.
+        if ($this->container->canCreateFromAbstractFactory($serviceName, $serviceName)) {
+            return sprintf(
+                '$this->container->get(\'%s\')', $serviceName
+            );
+        }
 
         return sprintf(
             '$this->get(\'%s\')', $serviceName

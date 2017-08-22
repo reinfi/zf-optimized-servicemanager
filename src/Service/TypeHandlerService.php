@@ -33,7 +33,7 @@ class TypeHandlerService
         Invokable::class => InvokableHandler::class,
         Delegator::class => DelegatorHandler::class,
         Factory::class   => FactoryHandler::class,
-        Injection::class   => FactoryHandler::class,
+        Injection::class => FactoryHandler::class,
         AutoWire::class  => AutowireHandler::class,
     ];
 
