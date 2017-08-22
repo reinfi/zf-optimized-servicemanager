@@ -6,6 +6,7 @@ return [
             \Reinfi\OptimizedServiceManager\Service\Service1::class         => \Reinfi\DependencyInjection\Factory\AutoWiringFactory::class,
             \Reinfi\OptimizedServiceManager\Service\Service2::class         => \Zend\ServiceManager\Factory\InvokableFactory::class,
             \Reinfi\OptimizedServiceManager\Service\Service3::class         => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\Service5::class         => \Reinfi\DependencyInjection\Factory\AutoWiringFactory::class,
             \Reinfi\OptimizedServiceManager\Service\ServiceDelegator::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
         ],
         'delegators'         => [
