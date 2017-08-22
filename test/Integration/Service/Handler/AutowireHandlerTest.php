@@ -195,4 +195,43 @@ class AutowireHandlerTest extends AbstractIntegrationTest
             $method->getMethodBody()
         );
     }
+
+    /**
+     * @test
+     */
+    public function itResolvesEvenIfNoInjectionIsFound()
+    {
+        $serviceManager = $this->getServiceManager(
+            require __DIR__ . '/../../../resources/config.php'
+        );
+
+        $resolverService = $this->prophesize(ResolverService::class);
+        $resolverService->resolve(Argument::exact(Service1::class))
+            ->willReturn([]);
+        $serviceManager->setAllowOverride(true)
+            ->setService(ResolverService::class, $resolverService->reveal());
+
+        /** @var AutowireHandler $handler */
+        $handler = $serviceManager->get(AutowireHandler::class);
+
+        $type = new AutoWire(Service1::class);
+
+        $method = $handler->handle($type);
+
+        $this->assertEquals(
+            Service1::class,
+            $method->getClassName()
+        );
+
+        $this->assertCount(
+            1,
+            $method->getMethodBody(),
+            'There should be one method body part'
+        );
+
+        $this->assertContains(
+            sprintf('return new \\%s();', Service1::class),
+            $method->getMethodBody()
+        );
+    }
 }

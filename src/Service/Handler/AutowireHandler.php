@@ -60,6 +60,12 @@ class AutowireHandler extends AbstractHandler
             }
         }
 
+        if (count($injectionCalls) === 0) {
+            $method->addBodyPart(sprintf('return new \\%s();', $type->getService()));
+
+            return;
+        }
+
         $method->addBodyPart(sprintf('return new \\%s(', $type->getService()));
         $lastInjectionCall = array_pop($injectionCalls);
         foreach ($injectionCalls as $injectionCall) {
