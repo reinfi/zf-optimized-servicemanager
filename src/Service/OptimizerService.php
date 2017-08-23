@@ -15,7 +15,7 @@ class OptimizerService implements OptimizerServiceInterface
     /**
      * @var array
      */
-    const CANONICAL_NAME_REPLACEMENTS = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => ''];
+    const CANONICAL_NAME_REPLACEMENTS = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => '', '.' => ''];
 
     /**
      * @var MappingService
