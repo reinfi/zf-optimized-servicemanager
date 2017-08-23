@@ -13,6 +13,11 @@ use Zend\ServiceManager\ServiceManager;
 class OptimizerService implements OptimizerServiceInterface
 {
     /**
+     * @var array
+     */
+    const CANONICAL_NAME_REPLACEMENTS = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => ''];
+
+    /**
      * @var MappingService
      */
     private $mappingService;
@@ -99,7 +104,7 @@ class OptimizerService implements OptimizerServiceInterface
             $method = $class->addMethod(
                 sprintf(
                     'get%s',
-                    ucfirst(md5($instantiationMethod->getClassName()))
+                    $this->buildMethodName($instantiationMethod)
                 )
             );
 
@@ -115,6 +120,18 @@ class OptimizerService implements OptimizerServiceInterface
         }
 
         return $methodMapping;
+    }
+
+    /**
+     * @param InstantiationMethod $instantiationMethod
+     *
+     * @return string
+     */
+    protected function buildMethodName(InstantiationMethod $instantiationMethod): string
+    {
+        return ucfirst(
+            strtr($instantiationMethod->getClassName(), static::CANONICAL_NAME_REPLACEMENTS)
+        );
     }
 
     /**
