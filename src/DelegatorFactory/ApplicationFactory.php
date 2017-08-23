@@ -31,7 +31,7 @@ class ApplicationFactory implements FactoryInterface, DelegatorFactoryInterface
         $name,
         array $options = null
     ) {
-        $managerClass = OptimizerService::SERVICE_MANAGER_CLASSNAME;
+        $managerClass = OptimizerService::SERVICE_MANAGER_FQCN;
 
         return new Application(
             $container->get('config'),
