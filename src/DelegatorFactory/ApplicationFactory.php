@@ -21,15 +21,11 @@ class ApplicationFactory implements FactoryInterface, DelegatorFactoryInterface
      * service and the service manager instance.
      *
      * @param  ZendServiceManager $container
-     * @param  string             $name
-     * @param  null|array         $options
      *
      * @return Application
      */
     public function __invoke(
-        ZendServiceManager $container,
-        $name,
-        array $options = null
+        ZendServiceManager $container
     ) {
         $managerClass = OptimizerService::SERVICE_MANAGER_FQCN;
 
@@ -53,7 +49,7 @@ class ApplicationFactory implements FactoryInterface, DelegatorFactoryInterface
      */
     public function createService(ServiceLocatorInterface $container)
     {
-        return $this($container, Application::class);
+        return $this($container);
     }
 
     /**
