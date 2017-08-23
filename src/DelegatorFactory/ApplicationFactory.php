@@ -67,7 +67,7 @@ class ApplicationFactory implements FactoryInterface, DelegatorFactoryInterface
         $callback
     ) {
         if (class_exists(OptimizerService::SERVICE_MANAGER_FQCN)) {
-            return $this($serviceLocator, $requestedName);
+            return $this($serviceLocator);
         }
 
         return $callback();
