@@ -58,10 +58,11 @@ class ClassBuilderService
 
     /**
      * @param ClassType $class
+     * @param Options   $options
      *
      * @return Method
      */
-    public function addGetMethod(ClassType $class): Method
+    public function addGetMethod(ClassType $class, Options $options): Method
     {
         $getMethod = $class->addMethod('get')
             ->setVisibility('public')
@@ -83,6 +84,25 @@ class ClassBuilderService
             ->addBody('if ($instance === null):')
             ->addBody('    $instance = parent::get($name, $usePeeringServiceManagers);')
             ->addBody('endif;')
+            ->addBody('')
+            ->addBody('if ($instance === null):')
+            ->addBody('    return $instance;')
+            ->addBody('endif;');
+
+        if ($options->isWithInitializers()) {
+            $getMethod
+                ->addBody('foreach ($this->initializers as $initializer):')
+                ->addBody('    if ($initializer instanceof \Zend\ServiceManager\InitializerInterface):')
+                ->addBody('        $initializer->initialize($instance, $this);')
+                ->addBody('    else:')
+                ->addBody('        call_user_func($initializer, $instance, $this);')
+                ->addBody('    endif;')
+                ->addBody('    endforeach;')
+                ->addBody('')
+            ;
+        }
+
+        $getMethod
             ->addBody('if (isset($this->shared[$name]) && $this->shared[$name]):')
             ->addBody('    $this->instances[$name] = $instance;')
             ->addBody('endif;')

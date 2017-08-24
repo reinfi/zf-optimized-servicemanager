@@ -32,7 +32,9 @@ interface OptimizerServiceInterface
     const SERVICE_MANAGER_FILENAME = 'Manager.php';
 
     /**
+     * @param Options|null $options
+     *
      * @return PhpNamespace
      */
-    public function generate(): PhpNamespace;
+    public function generate(Options $options = null): PhpNamespace;
 }

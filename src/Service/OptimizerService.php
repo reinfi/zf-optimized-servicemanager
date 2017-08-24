@@ -50,15 +50,19 @@ class OptimizerService implements OptimizerServiceInterface
     /**
      * @inheritdoc
      */
-    public function generate(): PhpNamespace
+    public function generate(Options $options = null): PhpNamespace
     {
+        if ($options === null) {
+            $options = new Options();
+        }
+
         $namespace = $this->classBuilderService->buildNamespace(static::SERVICE_MANAGER_NAMESPACE);
 
         $class = $this->classBuilderService->buildClass($namespace, static::SERVICE_MANAGER_CLASSNAME);
         $class->setExtends(ServiceManager::class);
 
         $this->classBuilderService->addConstructor($class);
-        $this->classBuilderService->addGetMethod($class);
+        $this->classBuilderService->addGetMethod($class, $options);
         $this->classBuilderService->addHasMethod($class);
         $this->addSharedProperty($class);
 

@@ -9,6 +9,8 @@ use Reinfi\OptimizedServiceManager\Service\OptimizerServiceInterface;
 use Zend\Console\Adapter\AdapterInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\RequestInterface;
@@ -140,6 +142,10 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
         $optimizerService = $serviceManager->get(OptimizerServiceInterface::class);
 
         $controller = new GenerateController($optimizerService);
+
+        $event = new MvcEvent();
+        $event->setRouteMatch(new RouteMatch([]));
+        $controller->setEvent($event);
 
         $console = $this->prophesize(AdapterInterface::class);
         $controller->setConsole($console->reveal());

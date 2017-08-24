@@ -26,7 +26,7 @@ return [
             'routes' => [
                 'reinfi-di-cache-warmup' => [
                     'options' => [
-                        'route'    => 'reinfi:optimize service-manager',
+                        'route'    => 'reinfi:optimize service-manager [--with-initializers]',
                         'defaults' => [
                             'controller' => \Reinfi\OptimizedServiceManager\Controller\GenerateController::class,
                             'action'     => 'index',

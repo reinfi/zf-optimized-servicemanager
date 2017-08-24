@@ -25,5 +25,10 @@ Generate an optimized service manager for zend framework.
 * Generate servicemanager: `php public/index.php reinfi:optimize service-manager`
   Generates an optimized service manager based on your current configuration.
 
+  Options
+
+  --with-initializers : generate initializers if you still use them (they are deprecated)
+
+
 ### FAQ
 Feel free to ask any questions or open own pull requests.

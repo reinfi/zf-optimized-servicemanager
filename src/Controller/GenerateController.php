@@ -4,6 +4,7 @@ namespace Reinfi\OptimizedServiceManager\Controller;
 
 use Nette\PhpGenerator\PhpNamespace;
 use Reinfi\OptimizedServiceManager\Service\OptimizerServiceInterface;
+use Reinfi\OptimizedServiceManager\Service\Options;
 use Zend\Mvc\Controller\AbstractConsoleController;
 
 /**
@@ -29,7 +30,8 @@ class GenerateController extends AbstractConsoleController
      */
     public function indexAction()
     {
-        $namespace = $this->optimizerService->generate();
+        $options = $this->getOptions();
+        $namespace = $this->optimizerService->generate($options);
 
         $classFile = $this->buildClassFile($namespace);
         $filePath = $this->getFilePath();
@@ -41,6 +43,23 @@ class GenerateController extends AbstractConsoleController
         $this->console->writeLine('Finished generating optimized service manager');
     }
 
+    /**
+     * @return Options
+     */
+    private function getOptions(): Options
+    {
+        $params = $this->params()->fromRoute();
+
+        return new Options([
+            'withInitializers' => isset($params['with-initializers']),
+        ]);
+    }
+
+    /**
+     * @param PhpNamespace $namespace
+     *
+     * @return string
+     */
     private function buildClassFile(PhpNamespace $namespace): string
     {
         return sprintf(
