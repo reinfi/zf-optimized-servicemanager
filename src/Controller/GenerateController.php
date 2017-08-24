@@ -30,11 +30,19 @@ class GenerateController extends AbstractConsoleController
      */
     public function indexAction()
     {
+        $filePath = $this->getFilePath();
+        // Remove old implementation, so we don't use it while generating.
+        if (
+            class_exists(OptimizerServiceInterface::SERVICE_MANAGER_FQCN, false)
+            && file_exists($filePath)
+        ) {
+            unlink($filePath);
+        }
+
         $options = $this->getOptions();
         $namespace = $this->optimizerService->generate($options);
 
         $classFile = $this->buildClassFile($namespace);
-        $filePath = $this->getFilePath();
         file_put_contents(
             $filePath,
             $classFile
