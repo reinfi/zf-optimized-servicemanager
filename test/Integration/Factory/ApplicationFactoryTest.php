@@ -7,6 +7,7 @@ use Reinfi\OptimizedServiceManager\DelegatorFactory\ApplicationFactory;
 use Reinfi\OptimizedServiceManager\Integration\AbstractIntegrationTest;
 use Reinfi\OptimizedServiceManager\Service\OptimizerServiceInterface;
 use Zend\Console\Adapter\AdapterInterface;
+use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
@@ -44,6 +45,8 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
         $factory = new ApplicationFactory();
+
+        Console::overrideIsConsole(false);
 
         $instance = $factory->createDelegatorWithName(
             $container->reveal(),
