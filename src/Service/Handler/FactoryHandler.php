@@ -19,7 +19,7 @@ class FactoryHandler extends AbstractHandler
     ) {
         $method->addBodyPart(
             sprintf(
-                'return $this->container->get(\'%s\');',
+                'return parent::get(\'%s\');',
                 $type->getService()
             )
         );

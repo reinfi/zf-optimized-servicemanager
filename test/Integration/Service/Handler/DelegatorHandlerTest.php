@@ -41,7 +41,7 @@ class DelegatorHandlerTest extends AbstractIntegrationTest
 
         $this->assertContains(
             sprintf(
-                'return $this->container->get(\'%s\');',
+                'return parent::get(\'%s\');',
                 $type->getService()
             ),
             $method->getMethodBody()

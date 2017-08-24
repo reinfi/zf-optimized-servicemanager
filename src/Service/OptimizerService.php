@@ -57,10 +57,6 @@ class OptimizerService implements OptimizerServiceInterface
         $class = $this->classBuilderService->buildClass($namespace, static::SERVICE_MANAGER_CLASSNAME);
         $class->setExtends(ServiceManager::class);
 
-        $class->addProperty('container')
-            ->setVisibility('private')
-            ->addComment('@var \\' . ServiceManager::class);
-
         $this->classBuilderService->addConstructor($class);
         $this->classBuilderService->addGetMethod($class);
         $this->classBuilderService->addHasMethod($class);

@@ -93,7 +93,7 @@ class AutowireHandlerTest extends AbstractIntegrationTest
 
         $this->assertContains(
             sprintf(
-                '$this->container->get(\'%s\')',
+                'parent::get(\'%s\')',
                 Service4::class
             ),
             $method->getMethodBody()
@@ -137,7 +137,7 @@ class AutowireHandlerTest extends AbstractIntegrationTest
 
         $this->assertContains(
             sprintf(
-                '$this->container->get(\'%s\')->get(\'%s\')',
+                'parent::get(\'%s\')->get(\'%s\')',
                 'PluginManager',
                 Service2::class
             ),
@@ -189,7 +189,7 @@ class AutowireHandlerTest extends AbstractIntegrationTest
 
         $this->assertContains(
             sprintf(
-                '$this->container->get(\'%s\')',
+                'parent::get(\'%s\')',
                 Service2::class
             ),
             $method->getMethodBody()

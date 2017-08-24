@@ -32,6 +32,8 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
         $container = $this->prophesize(ServiceManager::class);
         $container->get('EventManager')
             ->willReturn($this->prophesize(EventManagerInterface::class)->reveal());
+        $container->has('config')
+            ->willReturn(false);
         $container->get('config')
             ->willReturn([]);
         $container->get('Request')
@@ -73,8 +75,10 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
         $container = $this->prophesize(ServiceManager::class);
         $container->get('EventManager')
                   ->willReturn($this->prophesize(EventManagerInterface::class)->reveal());
+        $container->has('config')
+                  ->willReturn(true);
         $container->get('config')
-                  ->willReturn([]);
+                  ->willReturn(['service_manager' => []]);
         $container->get('Request')
                   ->willReturn($this->prophesize(RequestInterface::class)->reveal());
         $container->get('Response')

@@ -49,8 +49,11 @@ class ClassBuilderService
             ->setTypeHint(ServiceManager::class);
 
         $constructor
-            ->addBody('parent::__construct();')
-            ->addBody('$this->container = $container;');
+            ->addBody('if ($container->has(\'config\')):')
+            ->addBody('    $config = $container->get(\'config\');')
+            ->addBody('')
+            ->addBody('    parent::__construct(new \Zend\Mvc\Service\ServiceManagerConfig($config[\'service_manager\'] ?? []));')
+            ->addBody('endif;');
     }
 
     /**
@@ -78,11 +81,12 @@ class ClassBuilderService
             ->addBody('endif;')
             ->addBody('')
             ->addBody('if ($instance === null):')
-            ->addBody('    $instance = $this->container->get($name, $usePeeringServiceManagers);')
+            ->addBody('    $instance = parent::get($name, $usePeeringServiceManagers);')
             ->addBody('endif;')
             ->addBody('if (isset($this->shared[$name]) && $this->shared[$name]):')
             ->addBody('    $this->instances[$name] = $instance;')
             ->addBody('endif;')
+            ->addBody('')
             ->addBody('return $instance;');
 
         return $getMethod;
@@ -103,9 +107,18 @@ class ClassBuilderService
         $hasMethod->addParameter('checkAbstractFactories', true);
         $hasMethod->addParameter('usePeeringServiceManagers', true);
 
-        $hasMethod->addBody(
-            'return $this->container->has($name, $checkAbstractFactories, $usePeeringServiceManagers);'
-        );
+        $hasMethod
+            ->addBody('if (is_array($name)):')
+            ->addBody('    list(, $name) = $name;')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody('if (isset($this->mappings[$name])):')
+            ->addBody('    return true;')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody(
+            'return parent::has($name, $checkAbstractFactories, $usePeeringServiceManagers);'
+            );
 
         return $hasMethod;
     }
