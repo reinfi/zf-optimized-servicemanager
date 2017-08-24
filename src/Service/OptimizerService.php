@@ -101,6 +101,10 @@ class OptimizerService implements OptimizerServiceInterface
         $methodMapping = [];
 
         foreach ($instantiationMethods as $instantiationMethod) {
+            if (!class_exists($instantiationMethod->getClassName())) {
+                continue;
+            }
+
             $method = $class->addMethod(
                 sprintf(
                     'get%s',
