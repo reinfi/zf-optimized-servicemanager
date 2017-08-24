@@ -13,6 +13,20 @@ use Zend\ServiceManager\ServiceManager;
 class ClassBuilderService
 {
     /**
+     * @var array
+     */
+    private $serviceManagerConfig;
+
+    /**
+     * @param array $serviceManagerConfig
+     */
+    public function __construct(
+        array $serviceManagerConfig
+    ) {
+        $this->serviceManagerConfig = $serviceManagerConfig;
+    }
+
+    /**
      * @param string $namespace
      *
      * @return PhpNamespace
@@ -141,5 +155,42 @@ class ClassBuilderService
             );
 
         return $hasMethod;
+    }
+
+    /**
+     * @param ClassType $class
+     */
+    public function addConfigValues(ClassType $class)
+    {
+        $class
+            ->addProperty(
+            'invokableClasses',
+            $this->serviceManagerConfig['invokables'] ?? []
+            )->setVisibility('protected');
+        $class
+            ->addProperty(
+            'factories',
+            $this->serviceManagerConfig['factories'] ?? []
+            )->setVisibility('protected');
+        $class
+            ->addProperty(
+            'delegators',
+            $this->serviceManagerConfig['delegators'] ?? []
+            )->setVisibility('protected');
+        $class
+            ->addProperty(
+                'aliases',
+                $this->serviceManagerConfig['aliases'] ?? []
+            )->setVisibility('protected');
+        $class
+            ->addProperty(
+                'initializers',
+                $this->serviceManagerConfig['initializers'] ?? []
+            )->setVisibility('protected');
+        $class
+            ->addProperty(
+                'abstractFactories',
+                $this->serviceManagerConfig['abstract_factories'] ?? []
+            )->setVisibility('protected');
     }
 }
