@@ -3,6 +3,7 @@
 namespace Reinfi\OptimizedServiceManager;
 
 use Reinfi\OptimizedServiceManager\Service\OptimizerService;
+use Zend\Console\Console;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\ModuleEvent;
@@ -43,7 +44,7 @@ class Module implements ConfigProviderInterface, InitProviderInterface
     {
         $container = $event->getParam('ServiceManager');
 
-        if (class_exists(OptimizerService::SERVICE_MANAGER_FQCN)) {
+        if (!Console::isConsole() && class_exists(OptimizerService::SERVICE_MANAGER_FQCN)) {
             $managerClass = OptimizerService::SERVICE_MANAGER_FQCN;
 
             $event->setParam('ServiceManager', new $managerClass($container));

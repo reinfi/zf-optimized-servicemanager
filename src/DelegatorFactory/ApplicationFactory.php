@@ -3,6 +3,7 @@
 namespace Reinfi\OptimizedServiceManager\DelegatorFactory;
 
 use Reinfi\OptimizedServiceManager\Service\OptimizerService;
+use Zend\Console\Console;
 use Zend\Mvc\Application;
 use Zend\ServiceManager\DelegatorFactoryInterface;
 use Zend\ServiceManager\FactoryInterface;
@@ -66,7 +67,7 @@ class ApplicationFactory implements FactoryInterface, DelegatorFactoryInterface
         $requestedName,
         $callback
     ) {
-        if (class_exists(OptimizerService::SERVICE_MANAGER_FQCN)) {
+        if (!Console::isConsole() && class_exists(OptimizerService::SERVICE_MANAGER_FQCN)) {
             return $this($serviceLocator);
         }
 
