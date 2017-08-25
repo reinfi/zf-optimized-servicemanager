@@ -8,6 +8,7 @@ use Nette\PhpGenerator\PhpNamespace;
 use Zend\ModuleManager\Listener\ConfigListener;
 use Zend\Mvc\Application;
 use Zend\Mvc\Service\ServiceListenerFactory;
+use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -313,12 +314,19 @@ class ClassBuilderService
     {
         $reflClass = ClassType::from(ServiceListenerFactory::class);
 
-        $defaultServiceConfig = $reflClass
+        $defaultServiceListenerConfig = $reflClass
             ->getProperty('defaultServiceConfig')
             ->getValue();
 
+        $reflClass = ClassType::from(ServiceManagerConfig::class);
+
+        $defaultServiceManagerConfig = $reflClass
+            ->getProperty('config')
+            ->getValue();
+
         return array_merge(
-            $defaultServiceConfig[$key] ?? [],
+            $defaultServiceListenerConfig[$key] ?? [],
+            $defaultServiceManagerConfig[$key] ?? [],
             $this->serviceManagerConfig[$key] ?? []
         );
     }
