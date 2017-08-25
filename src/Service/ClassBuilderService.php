@@ -85,6 +85,10 @@ class ClassBuilderService
             ->addBody('    $this->instances[\'config\'] = $configListener->getMergedConfig(false);')
             ->addBody('endif;')
             ->addBody('')
+            ->addBody('foreach ($this->registeredInitializers as $initializer):')
+            ->addBody('    $this->addInitializer($initializer);')
+            ->addBody('endforeach;')
+            ->addBody('')
             ->addBody('$container->setService(__CLASS__, $this);');
     }
 
@@ -277,7 +281,7 @@ class ClassBuilderService
             )->setVisibility('protected');
         $class
             ->addProperty(
-                'initializers',
+                'registeredInitializers',
                 $this->getConfigServices('initializers')
             )->setVisibility('protected');
         $class
