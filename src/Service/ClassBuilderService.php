@@ -6,6 +6,7 @@ use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
 use Zend\ModuleManager\Listener\ConfigListener;
+use Zend\Mvc\Service\ServiceListenerFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -70,7 +71,7 @@ class ClassBuilderService
 
         $constructor->addParameter('configListener')
             ->setTypeHint(ConfigListener::class)
-            ->setNullable(true);
+            ->setDefaultValue(null);
 
         $constructor
             ->addBody('parent::__construct();')
@@ -250,7 +251,7 @@ class ClassBuilderService
             'invokableClasses',
             $this->prepareNames(
                 $options,
-                $this->serviceManagerConfig['invokables'] ?? []
+                $this->getConfigServices('invokables')
             )
             )->setVisibility('protected');
         $class
@@ -258,32 +259,51 @@ class ClassBuilderService
             'factories',
                 $this->prepareNames(
                     $options,
-                    $this->serviceManagerConfig['factories'] ?? []
+                    $this->getConfigServices('factories')
                 )
             )->setVisibility('protected');
         $class
             ->addProperty(
             'delegators',
-            $this->serviceManagerConfig['delegators'] ?? []
+                $this->getConfigServices('delegators')
             )->setVisibility('protected');
         $class
             ->addProperty(
                 'aliases',
                 $this->prepareNames(
                     $options,
-                    $this->serviceManagerConfig['aliases'] ?? []
+                    $this->getConfigServices('aliases')
                 )
             )->setVisibility('protected');
         $class
             ->addProperty(
                 'initializers',
-                $this->serviceManagerConfig['initializers'] ?? []
+                $this->getConfigServices('initializers')
             )->setVisibility('protected');
         $class
             ->addProperty(
                 'registeredAbstractFactories',
-                $this->serviceManagerConfig['abstract_factories'] ?? []
+                $this->getConfigServices('abstract_factories')
             )->setVisibility('protected');
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return array
+     */
+    private function getConfigServices(string $key): array
+    {
+        $reflClass = ClassType::from(ServiceListenerFactory::class);
+
+        $defaultServiceConfig = $reflClass
+            ->getProperty('defaultServiceConfig')
+            ->getValue();
+
+        return array_merge(
+            $defaultServiceConfig[$key] ?? [],
+            $this->serviceManagerConfig[$key] ?? []
+        );
     }
 
     /**

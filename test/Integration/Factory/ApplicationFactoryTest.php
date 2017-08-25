@@ -2,6 +2,7 @@
 
 namespace Reinfi\OptimizedServiceManager\Integration\Factory;
 
+use Prophecy\Argument;
 use Reinfi\OptimizedServiceManager\Controller\GenerateController;
 use Reinfi\OptimizedServiceManager\DelegatorFactory\ApplicationFactory;
 use Reinfi\OptimizedServiceManager\Integration\AbstractIntegrationTest;
@@ -9,6 +10,7 @@ use Reinfi\OptimizedServiceManager\Service\OptimizerServiceInterface;
 use Zend\Console\Adapter\AdapterInterface;
 use Zend\Console\Console;
 use Zend\EventManager\EventManagerInterface;
+use Zend\ModuleManager\Listener\ServiceListener;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
@@ -33,16 +35,24 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
         $this->createOptimizedManager();
 
         $container = $this->prophesize(ServiceManager::class);
+        $container->has(OptimizerServiceInterface::SERVICE_MANAGER_FQCN)
+            ->willReturn(false);
         $container->get('EventManager')
             ->willReturn($this->prophesize(EventManagerInterface::class)->reveal());
         $container->has('config')
-            ->willReturn(false);
+            ->willReturn(true);
         $container->get('config')
             ->willReturn([]);
         $container->get('Request')
             ->willReturn($this->prophesize(RequestInterface::class)->reveal());
         $container->get('Response')
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
+        $container->get('servicelistener')
+                  ->willReturn($this->prophesize(ServiceListener::class)->reveal());
+        $container->get('applicationconfig')
+                  ->willReturn([]);
+        $container->setService(Argument::any(), Argument::any())
+            ->shouldBeCalled();
 
         $factory = new ApplicationFactory();
 
@@ -78,6 +88,8 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
         $this->createOptimizedManager();
 
         $container = $this->prophesize(ServiceManager::class);
+        $container->has(OptimizerServiceInterface::SERVICE_MANAGER_FQCN)
+                  ->willReturn(false);
         $container->get('EventManager')
                   ->willReturn($this->prophesize(EventManagerInterface::class)->reveal());
         $container->has('config')
@@ -88,6 +100,12 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
                   ->willReturn($this->prophesize(RequestInterface::class)->reveal());
         $container->get('Response')
                   ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
+        $container->get('servicelistener')
+                  ->willReturn($this->prophesize(ServiceListener::class)->reveal());
+        $container->get('applicationconfig')
+                  ->willReturn([]);
+        $container->setService(Argument::any(), Argument::any())
+                  ->shouldBeCalled();
 
         $factory = new ApplicationFactory();
 
