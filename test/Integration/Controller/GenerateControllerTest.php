@@ -28,7 +28,7 @@ class GenerateControllerTest extends AbstractIntegrationTest
         $controller = new GenerateController($optimizerService);
 
         $event = new MvcEvent();
-        $event->setRouteMatch(new RouteMatch([]));
+        $event->setRouteMatch(new RouteMatch(['with-initializers' => false]));
         $controller->setEvent($event);
 
         $console = $this->prophesize(AdapterInterface::class);
@@ -80,7 +80,7 @@ class GenerateControllerTest extends AbstractIntegrationTest
         $filePath = realpath(__DIR__ . '/../../../src/') . DIRECTORY_SEPARATOR  . OptimizerServiceInterface::SERVICE_MANAGER_FILENAME;
 
         if (file_exists($filePath)) {
-            #unlink($filePath);
+            unlink($filePath);
         }
     }
 }

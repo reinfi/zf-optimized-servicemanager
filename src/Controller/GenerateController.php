@@ -59,7 +59,7 @@ class GenerateController extends AbstractConsoleController
         $params = $this->params()->fromRoute();
 
         return new Options([
-            'withInitializers' => isset($params['with-initializers']),
+            'withInitializers' => $params['with-initializers'] !== false,
         ]);
     }
 
