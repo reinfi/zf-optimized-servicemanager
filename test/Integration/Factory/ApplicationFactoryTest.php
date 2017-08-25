@@ -147,7 +147,7 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
         $controller = new GenerateController($optimizerService);
 
         $event = new MvcEvent();
-        $event->setRouteMatch(new RouteMatch(['with-initializers' => false]));
+        $event->setRouteMatch(new RouteMatch(['with-initializers' => false, 'canonicalize-names' => false]));
         $controller->setEvent($event);
 
         $console = $this->prophesize(AdapterInterface::class);

@@ -15,6 +15,11 @@ class Options extends AbstractOptions
     private $withInitializers = false;
 
     /**
+     * @var bool
+     */
+    private $canonicalizeNames = false;
+
+    /**
      * @return bool
      */
     public function isWithInitializers(): bool
@@ -30,6 +35,25 @@ class Options extends AbstractOptions
     public function setWithInitializers(bool $withInitializers): Options
     {
         $this->withInitializers = $withInitializers;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCanonicalizeNames(): bool
+    {
+        return $this->canonicalizeNames;
+    }
+
+    /**
+     * @param bool $canonicalizeNames
+     * @return Options
+     */
+    public function setCanonicalizeNames(bool $canonicalizeNames)
+    {
+        $this->canonicalizeNames = $canonicalizeNames;
 
         return $this;
     }

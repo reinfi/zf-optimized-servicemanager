@@ -13,6 +13,11 @@ use Zend\ServiceManager\ServiceManager;
 class ClassBuilderService
 {
     /**
+     * @var array map of characters to be replaced through strtr
+     */
+    const CANONICAL_NAMES_REPLACEMENTS = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => ''];
+
+    /**
      * @var array
      */
     private $serviceManagerConfig;
@@ -74,9 +79,9 @@ class ClassBuilderService
     {
         $this->addGetMethod($class, $options);
         $this->addHasMethod($class);
-        $this->overwriteCanonicalizeName($class);
+        $this->overwriteCanonicalizeName($class, $options);
         $this->overwriteCanCreateFromAbstractFactory($class);
-        $this->addConfigValues($class);
+        $this->addConfigValues($class, $options);
     }
 
     /**
@@ -168,11 +173,16 @@ class ClassBuilderService
 
     /**
      * @param ClassType $class
+     * @param Options   $options
      *
-     * @return Method
+     * @return void
      */
-    private function overwriteCanonicalizeName(ClassType $class): Method
+    private function overwriteCanonicalizeName(ClassType $class, Options $options)
     {
+        if (!$options->isCanonicalizeNames()) {
+            return;
+        }
+
         $method = $class->addMethod('canonicalizeName')
             ->setVisibility('protected')
             ->addComment('@inheritdoc');
@@ -180,8 +190,6 @@ class ClassBuilderService
         $method->addParameter('name');
 
         $method->addBody('return $name;');
-
-        return $method;
     }
 
     /**
@@ -215,18 +223,27 @@ class ClassBuilderService
 
     /**
      * @param ClassType $class
+     * @param Options   $options
+     *
+     * @return void
      */
-    private function addConfigValues(ClassType $class)
+    private function addConfigValues(ClassType $class, Options $options)
     {
         $class
             ->addProperty(
             'invokableClasses',
-            $this->serviceManagerConfig['invokables'] ?? []
+            $this->prepareNames(
+                $options,
+                $this->serviceManagerConfig['invokables'] ?? []
+            )
             )->setVisibility('protected');
         $class
             ->addProperty(
             'factories',
-            $this->serviceManagerConfig['factories'] ?? []
+                $this->prepareNames(
+                    $options,
+                    $this->serviceManagerConfig['factories'] ?? []
+                )
             )->setVisibility('protected');
         $class
             ->addProperty(
@@ -236,7 +253,10 @@ class ClassBuilderService
         $class
             ->addProperty(
                 'aliases',
-                $this->serviceManagerConfig['aliases'] ?? []
+                $this->prepareNames(
+                    $options,
+                    $this->serviceManagerConfig['aliases'] ?? []
+                )
             )->setVisibility('protected');
         $class
             ->addProperty(
@@ -248,5 +268,26 @@ class ClassBuilderService
                 'registeredAbstractFactories',
                 $this->serviceManagerConfig['abstract_factories'] ?? []
             )->setVisibility('protected');
+    }
+
+    /**
+     * @param Options $options
+     * @param array   $services
+     *
+     * @return array
+     */
+    private function prepareNames(Options $options, array $services): array
+    {
+        if (!$options->isCanonicalizeNames()) {
+            return $services;
+        }
+
+        foreach ($services as $service => $factory) {
+            $canonicalizedName = strtolower(strtr($service, static::CANONICAL_NAMES_REPLACEMENTS));
+
+            $services[$canonicalizedName] = $factory;
+        }
+
+        return $services;
     }
 }

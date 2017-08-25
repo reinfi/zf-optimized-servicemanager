@@ -28,7 +28,7 @@ class GenerateControllerTest extends AbstractIntegrationTest
         $controller = new GenerateController($optimizerService);
 
         $event = new MvcEvent();
-        $event->setRouteMatch(new RouteMatch(['with-initializers' => false]));
+        $event->setRouteMatch(new RouteMatch(['with-initializers' => false, 'canonicalize-names' => false]));
         $controller->setEvent($event);
 
         $console = $this->prophesize(AdapterInterface::class);
@@ -56,7 +56,7 @@ class GenerateControllerTest extends AbstractIntegrationTest
         $controller = new GenerateController($optimizerService);
 
         $event = new MvcEvent();
-        $event->setRouteMatch(new RouteMatch(['with-initializers' => true]));
+        $event->setRouteMatch(new RouteMatch(['with-initializers' => true, 'canonicalize-names' => true]));
         $controller->setEvent($event);
 
         $console = $this->prophesize(AdapterInterface::class);

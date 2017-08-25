@@ -100,4 +100,36 @@ class OptimizerServiceTest extends AbstractIntegrationTest
             'Method body should contain loop over initializers'
         );
     }
+
+    /**
+     * @test
+     */
+    public function itAddsCanonicalizedNamesIfOptionIsSet()
+    {
+        $serviceManager = $this->getServiceManager(
+            require __DIR__ . '/../../resources/config.php'
+        );
+
+        /** @var OptimizerService $service */
+        $service = $serviceManager->get(OptimizerService::class);
+
+        $options = new Options();
+        $options->setCanonicalizeNames(true);
+
+        $namespace = $service->generate($options);
+
+        $this->assertCount(1, $namespace->getClasses());
+        $this->assertEquals(OptimizerService::SERVICE_MANAGER_NAMESPACE, $namespace->getName());
+
+        /** @var ClassType $managerClass */
+        $managerClass = current($namespace->getClasses());
+
+        $property = $managerClass->getProperty('factories');
+
+        $this->assertArrayHasKey(
+            'reinfioptimizedservicemanagerserviceservice1',
+            $property->getValue(),
+            'Factories property should contain canonicalized names'
+        );
+    }
 }
