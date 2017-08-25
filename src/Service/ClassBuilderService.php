@@ -73,10 +73,22 @@ class ClassBuilderService
     /**
      * @param ClassType $class
      * @param Options   $options
+     */
+    public function addOverwriteMethods(ClassType $class, Options $options)
+    {
+        $this->addGetMethod($class, $options);
+        $this->addHasMethod($class);
+        $this->overwriteCanonicalizeName($class);
+        $this->addConfigValues($class);
+    }
+
+    /**
+     * @param ClassType $class
+     * @param Options   $options
      *
      * @return Method
      */
-    public function addGetMethod(ClassType $class, Options $options): Method
+    private function addGetMethod(ClassType $class, Options $options): Method
     {
         $getMethod = $class->addMethod('get')
             ->setVisibility('public')
@@ -131,7 +143,7 @@ class ClassBuilderService
      *
      * @return Method
      */
-    public function addHasMethod(ClassType $class): Method
+    private function addHasMethod(ClassType $class): Method
     {
         $hasMethod = $class->addMethod('has')
             ->setVisibility('public')
@@ -160,7 +172,21 @@ class ClassBuilderService
     /**
      * @param ClassType $class
      */
-    public function addConfigValues(ClassType $class)
+    private function overwriteCanonicalizeName(ClassType $class)
+    {
+        $method = $class->addMethod('canonicalizeName')
+            ->setVisibility('protected')
+            ->addComment('@inheritdoc');
+
+        $method->addParameter('name');
+
+        $method->addBody('return $name;');
+    }
+
+    /**
+     * @param ClassType $class
+     */
+    private function addConfigValues(ClassType $class)
     {
         $class
             ->addProperty(

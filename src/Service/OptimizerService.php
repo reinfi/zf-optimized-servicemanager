@@ -62,9 +62,7 @@ class OptimizerService implements OptimizerServiceInterface
         $class->setExtends(ServiceManager::class);
 
         $this->classBuilderService->addConstructor($class);
-        $this->classBuilderService->addGetMethod($class, $options);
-        $this->classBuilderService->addHasMethod($class);
-        $this->classBuilderService->addConfigValues($class);
+        $this->classBuilderService->addOverwriteMethods($class, $options);
         $this->addSharedProperty($class);
 
         $injectionMapping = $this->mappingService->buildMappings();
