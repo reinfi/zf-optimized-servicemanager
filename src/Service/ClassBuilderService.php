@@ -285,10 +285,10 @@ class ClassBuilderService
         $class
             ->addProperty(
                 'aliases',
-                $this->prepareNames(
-                    $options,
-                    array_merge(
-                        static::DEFAULT_ALIASES,
+                array_merge(
+                    static::DEFAULT_ALIASES,
+                    $this->prepareNames(
+                        $options,
                         $this->getConfigServices('aliases')
                     )
                 )
