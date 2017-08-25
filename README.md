@@ -30,7 +30,8 @@ Generate an optimized service manager for zend framework.
   Options
 
   --with-initializers : generate initializers if you still use them (they are deprecated)
-  --canonicalized-names : also add canonicalized names to service manager
+  
+  --canonicalize-names : also add canonicalized names to service manager
 
 
 ### FAQ
