@@ -47,7 +47,7 @@ class Module implements ConfigProviderInterface, InitProviderInterface
         if (!Console::isConsole() && class_exists(OptimizerService::SERVICE_MANAGER_FQCN)) {
             $managerClass = OptimizerService::SERVICE_MANAGER_FQCN;
 
-            $event->setParam('ServiceManager', new $managerClass($container));
+            $event->setParam('ServiceManager', new $managerClass($container, $event->getConfigListener()));
         }
     }
 }
