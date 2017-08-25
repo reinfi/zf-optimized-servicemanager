@@ -5,6 +5,9 @@ namespace Reinfi\OptimizedServiceManager\Service;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
+use Reinfi\OptimizedServiceManager\Manager\Initializer\EventManagerAwareInitializer;
+use Reinfi\OptimizedServiceManager\Manager\Initializer\ServiceLocatorAwareInitializer;
+use Reinfi\OptimizedServiceManager\Manager\Initializer\ServiceManagerAwareInitializer;
 use Zend\ModuleManager\Listener\ConfigListener;
 use Zend\Mvc\Application;
 use Zend\Mvc\Service\ServiceListenerFactory;
@@ -28,6 +31,15 @@ class ClassBuilderService
         'Config'      => 'config',
         'Application' => Application::class,
         'application' => Application::class,
+    ];
+
+    /**
+     * @var array
+     */
+    const DEFAULT_INITIALIZER = [
+        EventManagerAwareInitializer::class,
+        ServiceLocatorAwareInitializer::class,
+        ServiceManagerAwareInitializer::class,
     ];
 
     /**
@@ -296,7 +308,10 @@ class ClassBuilderService
         $class
             ->addProperty(
                 'registeredInitializers',
-                $this->getConfigServices('initializers')
+                array_merge(
+                    static::DEFAULT_INITIALIZER,
+                    $this->getConfigServices('initializers')
+                )
             )->setVisibility('protected');
         $class
             ->addProperty(
