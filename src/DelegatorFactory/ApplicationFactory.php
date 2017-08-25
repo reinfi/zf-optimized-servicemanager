@@ -9,6 +9,7 @@ use Zend\ServiceManager\DelegatorFactoryInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager as ZendServiceManager;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @package Reinfi\DependencyInjection\Factory\Application
@@ -30,9 +31,16 @@ class ApplicationFactory implements FactoryInterface, DelegatorFactoryInterface
     ) {
         $managerClass = OptimizerService::SERVICE_MANAGER_FQCN;
 
+        /** @var ServiceManager $manager */
+        if ($container->has($managerClass)) {
+            $manager = $container->get($managerClass);
+        } else {
+            $manager = new $managerClass($container);
+        }
+
         return new Application(
             $container->get('config'),
-            new $managerClass($container),
+            $manager,
             $container->get('EventManager'),
             $container->get('Request'),
             $container->get('Response')

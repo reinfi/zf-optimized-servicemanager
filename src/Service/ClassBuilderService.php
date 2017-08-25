@@ -5,6 +5,7 @@ namespace Reinfi\OptimizedServiceManager\Service;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
+use Zend\ModuleManager\Listener\ConfigListener;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -67,8 +68,23 @@ class ClassBuilderService
         $constructor->addParameter('container')
             ->setTypeHint(ServiceManager::class);
 
+        $constructor->addParameter('configListener')
+            ->setTypeHint(ConfigListener::class)
+            ->setNullable(true);
+
         $constructor
-            ->addBody('parent::__construct();');
+            ->addBody('parent::__construct();')
+            ->addBody('')
+            ->addBody('$this->instances[\'servicelistener\'] = $container->get(\'servicelistener\');')
+            ->addBody('$this->instances[\'applicationconfig\'] = $container->get(\'applicationconfig\');')
+            ->addBody('')
+            ->addBody('if ($container->has(\'config\')):')
+            ->addBody('    $this->instances[\'config\'] = $container->get(\'config\');')
+            ->addBody('else:')
+            ->addBody('    $this->instances[\'config\'] = $configListener->getMergedConfig(false);')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody('$container->setService(__CLASS__, $this);');
     }
 
     /**
