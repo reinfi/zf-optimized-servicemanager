@@ -63,11 +63,7 @@ class ClassBuilderService
             ->setTypeHint(ServiceManager::class);
 
         $constructor
-            ->addBody('if ($container->has(\'config\')):')
-            ->addBody('    $config = $container->get(\'config\');')
-            ->addBody('')
-            ->addBody('    parent::__construct(new \Zend\Mvc\Service\ServiceManagerConfig($config[\'service_manager\'] ?? []));')
-            ->addBody('endif;');
+            ->addBody('parent::__construct();');
     }
 
     /**
@@ -79,6 +75,7 @@ class ClassBuilderService
         $this->addGetMethod($class, $options);
         $this->addHasMethod($class);
         $this->overwriteCanonicalizeName($class);
+        $this->overwriteCanCreateFromAbstractFactory($class);
         $this->addConfigValues($class);
     }
 
@@ -171,8 +168,10 @@ class ClassBuilderService
 
     /**
      * @param ClassType $class
+     *
+     * @return Method
      */
-    private function overwriteCanonicalizeName(ClassType $class)
+    private function overwriteCanonicalizeName(ClassType $class): Method
     {
         $method = $class->addMethod('canonicalizeName')
             ->setVisibility('protected')
@@ -181,6 +180,37 @@ class ClassBuilderService
         $method->addParameter('name');
 
         $method->addBody('return $name;');
+
+        return $method;
+    }
+
+    /**
+     * @param ClassType $class
+     *
+     * @return Method
+     */
+    private function overwriteCanCreateFromAbstractFactory(ClassType $class): Method
+    {
+        $class->addProperty('initializedAbstractFactories', false);
+
+        $method = $class->addMethod('canCreateFromAbstractFactory')
+                        ->setVisibility('public')
+                        ->addComment('@inheritdoc');
+
+        $method->addParameter('cName');
+        $method->addParameter('rName');
+
+        $method
+            ->addBody('if ($this->initializedAbstractFactories === false):')
+            ->addBody('    foreach ($this->registeredAbstractFactories as $factory):')
+            ->addBody('        $this->addAbstractFactory($factory);')
+            ->addBody('    endforeach;')
+            ->addBody('    $this->initializedAbstractFactories = true;')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody('return parent::canCreateFromAbstractFactory($cName, $rName);');
+
+        return $method;
     }
 
     /**
@@ -215,7 +245,7 @@ class ClassBuilderService
             )->setVisibility('protected');
         $class
             ->addProperty(
-                'abstractFactories',
+                'registeredAbstractFactories',
                 $this->serviceManagerConfig['abstract_factories'] ?? []
             )->setVisibility('protected');
     }

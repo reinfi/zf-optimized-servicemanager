@@ -113,7 +113,7 @@ class OptimizerService implements OptimizerServiceInterface
 
             $method
                 ->setVisibility('protected')
-                ->addComment('@return \\' . $instantiationMethod->getClassName());
+                ->addComment('@return \\' . $instantiationMethod->getClassName() . '|object');
 
             foreach ($instantiationMethod->getMethodBody() as $bodyPart) {
                 $method->addBody($bodyPart);

@@ -45,7 +45,7 @@ class GenerateControllerTest extends AbstractIntegrationTest
     /**
      * @test
      */
-    public function itGeneratesServiceManagerWithOptioners()
+    public function itGeneratesServiceManagerWithOptions()
     {
         $serviceManager = $this->getServiceManager(
             require __DIR__ . '/../../resources/config.php'
