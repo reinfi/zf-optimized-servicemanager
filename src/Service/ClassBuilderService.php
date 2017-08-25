@@ -6,6 +6,7 @@ use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
 use Zend\ModuleManager\Listener\ConfigListener;
+use Zend\Mvc\Application;
 use Zend\Mvc\Service\ServiceListenerFactory;
 use Zend\ServiceManager\ServiceManager;
 
@@ -18,6 +19,15 @@ class ClassBuilderService
      * @var array map of characters to be replaced through strtr
      */
     const CANONICAL_NAMES_REPLACEMENTS = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => ''];
+
+    /**
+     * @var array
+     */
+    const DEFAULT_ALIASES = [
+        'Config'      => 'config',
+        'Application' => Application::class,
+        'application' => Application::class,
+    ];
 
     /**
      * @var array
@@ -276,7 +286,10 @@ class ClassBuilderService
                 'aliases',
                 $this->prepareNames(
                     $options,
-                    $this->getConfigServices('aliases')
+                    array_merge(
+                        static::DEFAULT_ALIASES,
+                        $this->getConfigServices('aliases')
+                    )
                 )
             )->setVisibility('protected');
         $class

@@ -38,13 +38,20 @@ class ApplicationFactory implements FactoryInterface, DelegatorFactoryInterface
             $manager = new $managerClass($container);
         }
 
-        return new Application(
+        $application = new Application(
             $container->get('config'),
             $manager,
             $container->get('EventManager'),
             $container->get('Request'),
             $container->get('Response')
         );
+
+        $manager
+            ->setAllowOverride(true)
+            ->setService(Application::class, $application)
+            ->setAllowOverride(false);
+
+        return $application;
     }
 
     /**
