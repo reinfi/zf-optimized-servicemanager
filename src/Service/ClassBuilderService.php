@@ -179,7 +179,7 @@ class ClassBuilderService
      */
     private function overwriteCanonicalizeName(ClassType $class, Options $options)
     {
-        if (!$options->isCanonicalizeNames()) {
+        if ($options->isCanonicalizeNames()) {
             return;
         }
 

@@ -2,6 +2,8 @@
 [![Code Climate](https://codeclimate.com/github/reinfi/zf-optimized-servicemanager/badges/gpa.svg)](https://codeclimate.com/github/reinfi/zf-optimized-servicemanager)
 [![Coverage Status](https://coveralls.io/repos/github/reinfi/zf-optimized-servicemanager/badge.svg?branch=master)](https://coveralls.io/github/reinfi/zf-optimized-servicemanager?branch=master)
 
+## Module is under development, there may be a lot of bugs at this moment.
+
 Generate an optimized service manager for zend framework.
 
 1. [Installation](#installation)
@@ -28,6 +30,7 @@ Generate an optimized service manager for zend framework.
   Options
 
   --with-initializers : generate initializers if you still use them (they are deprecated)
+  --canonicalized-names : also add canonicalized names to service manager
 
 
 ### FAQ
