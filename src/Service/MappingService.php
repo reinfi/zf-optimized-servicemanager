@@ -111,8 +111,8 @@ class MappingService
                     $mappings[$className] = new AutoWire($className);
 
                     continue;
-                } catch (AutoWiringNotPossibleException $e) {
-                    // just resolve it as a factory
+                } catch (\Throwable $e) {
+                    // just resolve it as a factory if any exception occurs.
                 }
             }
 
