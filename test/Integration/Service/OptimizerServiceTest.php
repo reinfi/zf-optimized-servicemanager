@@ -92,7 +92,7 @@ class OptimizerServiceTest extends AbstractIntegrationTest
         /** @var ClassType $managerClass */
         $managerClass = current($namespace->getClasses());
 
-        $method = $managerClass->getMethod('get');
+        $method = $managerClass->getMethod('internalGet');
 
         $this->assertContains(
             'foreach ($this->initializers as $initializer):',

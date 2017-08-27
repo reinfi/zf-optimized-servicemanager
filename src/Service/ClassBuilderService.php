@@ -84,6 +84,7 @@ class ClassBuilderService
     public function addOverwriteMethods(ClassType $class, Options $options)
     {
         $this->addGetMethod($class, $options);
+        $this->addInteralGetMethod($class, $options);
         $this->addHasMethod($class);
         $this->overwriteCanonicalizeName($class, $options);
         $this->overwriteCanCreateFromAbstractFactory($class);
@@ -105,7 +106,38 @@ class ClassBuilderService
         $getMethod->addParameter('usePeeringServiceManagers', true);
 
         $getMethod
+            ->addBody('try {')
+            ->addBody('  return $this->internalGet($name, $usePeeringServiceManagers);')
+            ->addBody('} catch(\Zend\ServiceManager\Exception\ServiceNotFoundException $e) {')
+            ->addBody('    $instance = $this->container->get($name, $usePeeringServiceManagers);')
+            ->addBody('')
+            ->addBody('    if (isset($this->shared[$name]) && $this->shared[$name]):')
+            ->addBody('        $this->instances[$name] = $instance;')
+            ->addBody('    endif;')
+            ->addBody('    return $instance;')
+            ->addBody('}');
+
+        return $getMethod;
+    }
+
+    /**
+     * @param ClassType $class
+     * @param Options   $options
+     *
+     * @return Method
+     */
+    private function addInteralGetMethod(ClassType $class, Options $options): Method
+    {
+        $getMethod = $class->addMethod('internalGet')
+            ->setVisibility('protected')
+            ->addComment('@inheritdoc');
+
+        $getMethod->addParameter('name');
+        $getMethod->addParameter('usePeeringServiceManagers', true);
+
+        $getMethod
             ->addBody('$instance = null;')
+            ->addBody('')
             ->addBody('if (isset($this->instances[$name])):')
             ->addBody('    return $this->instances[$name];')
             ->addBody('endif;')
