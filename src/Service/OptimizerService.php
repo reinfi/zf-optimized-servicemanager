@@ -33,18 +33,26 @@ class OptimizerService implements OptimizerServiceInterface
     private $typeHandlerService;
 
     /**
-     * @param MappingService      $mappingService
-     * @param ClassBuilderService $classBuilderService
-     * @param TypeHandlerService  $typeHandlerService
+     * @var ServiceManagerConfigService
+     */
+    private $serviceManagerConfigService;
+
+    /**
+     * @param MappingService              $mappingService
+     * @param ClassBuilderService         $classBuilderService
+     * @param TypeHandlerService          $typeHandlerService
+     * @param ServiceManagerConfigService $serviceManagerConfigService
      */
     public function __construct(
         MappingService $mappingService,
         ClassBuilderService $classBuilderService,
-        TypeHandlerService $typeHandlerService
+        TypeHandlerService $typeHandlerService,
+        ServiceManagerConfigService $serviceManagerConfigService
     ) {
         $this->mappingService = $mappingService;
         $this->classBuilderService = $classBuilderService;
         $this->typeHandlerService = $typeHandlerService;
+        $this->serviceManagerConfigService = $serviceManagerConfigService;
     }
 
     /**
@@ -64,6 +72,8 @@ class OptimizerService implements OptimizerServiceInterface
         $this->classBuilderService->addConstructor($class);
         $this->classBuilderService->addOverwriteMethods($class, $options);
         $this->addSharedProperty($class);
+
+        $this->serviceManagerConfigService->addServiceConfig($class, $options);
 
         $injectionMapping = $this->mappingService->buildMappings();
         $instantiationMethods = $this->typeHandlerService->resolveTypes($injectionMapping);

@@ -17,10 +17,6 @@ class ClassBuilderServiceFactory
      */
     public function __invoke(ContainerInterface $container): ClassBuilderService
     {
-        $config = $container->get('config');
-
-        return new ClassBuilderService(
-            $config['service_manager']
-        );
+        return new ClassBuilderService();
     }
 }

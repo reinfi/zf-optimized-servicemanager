@@ -7,6 +7,7 @@ use Reinfi\OptimizedServiceManager\Service\ClassBuilderService;
 use Reinfi\OptimizedServiceManager\Service\MappingService;
 use Reinfi\OptimizedServiceManager\Service\OptimizerService;
 use Reinfi\OptimizedServiceManager\Service\OptimizerServiceInterface;
+use Reinfi\OptimizedServiceManager\Service\ServiceManagerConfigService;
 use Reinfi\OptimizedServiceManager\Service\TypeHandlerService;
 
 /**
@@ -30,10 +31,14 @@ class OptimizerServiceFactory
         /** @var TypeHandlerService $typeHandlerService */
         $typeHandlerService = $container->get(TypeHandlerService::class);
 
+        /** @var ServiceManagerConfigService $serviceManagerConfigService */
+        $serviceManagerConfigService = $container->get(ServiceManagerConfigService::class);
+
         return new OptimizerService(
             $mappingService,
             $classBuilderService,
-            $typeHandlerService
+            $typeHandlerService,
+            $serviceManagerConfigService
         );
     }
 }

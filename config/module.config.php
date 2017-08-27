@@ -6,14 +6,15 @@ return [
             \Reinfi\OptimizedServiceManager\Service\OptimizerServiceInterface::class => \Reinfi\OptimizedServiceManager\Service\OptimizerService::class,
         ],
         'factories'  => [
-            \Reinfi\OptimizedServiceManager\Service\OptimizerService::class         => \Reinfi\OptimizedServiceManager\Service\Factory\OptimizerServiceFactory::class,
-            \Reinfi\OptimizedServiceManager\Service\MappingService::class           => \Reinfi\OptimizedServiceManager\Service\Factory\MappingServiceFactory::class,
-            \Reinfi\OptimizedServiceManager\Service\ClassBuilderService::class      => \Reinfi\OptimizedServiceManager\Service\Factory\ClassBuilderServiceFactory::class,
-            \Reinfi\OptimizedServiceManager\Service\TypeHandlerService::class       => \Reinfi\OptimizedServiceManager\Service\Factory\TypeHandlerServiceFactory::class,
-            \Reinfi\OptimizedServiceManager\Service\Handler\AutowireHandler::class  => \Reinfi\OptimizedServiceManager\Service\Handler\Factory\AutowireHandlerFactory::class,
-            \Reinfi\OptimizedServiceManager\Service\Handler\DelegatorHandler::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
-            \Reinfi\OptimizedServiceManager\Service\Handler\FactoryHandler::class   => \Zend\ServiceManager\Factory\InvokableFactory::class,
-            \Reinfi\OptimizedServiceManager\Service\Handler\InvokableHandler::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\OptimizerService::class            => \Reinfi\OptimizedServiceManager\Service\Factory\OptimizerServiceFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\MappingService::class              => \Reinfi\OptimizedServiceManager\Service\Factory\MappingServiceFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\ClassBuilderService::class         => \Reinfi\OptimizedServiceManager\Service\Factory\ClassBuilderServiceFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\ServiceManagerConfigService::class => \Reinfi\OptimizedServiceManager\Service\Factory\ServiceManagerConfigServiceFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\TypeHandlerService::class          => \Reinfi\OptimizedServiceManager\Service\Factory\TypeHandlerServiceFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\Handler\AutowireHandler::class     => \Reinfi\OptimizedServiceManager\Service\Handler\Factory\AutowireHandlerFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\Handler\DelegatorHandler::class    => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\Handler\FactoryHandler::class      => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\Handler\InvokableHandler::class    => \Zend\ServiceManager\Factory\InvokableFactory::class,
         ],
         'delegators' => [
             'Application' => [
