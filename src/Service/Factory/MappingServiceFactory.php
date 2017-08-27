@@ -3,8 +3,8 @@
 namespace Reinfi\OptimizedServiceManager\Service\Factory;
 
 use Psr\Container\ContainerInterface;
-use Reinfi\DependencyInjection\Service\AutoWiringService;
 use Reinfi\OptimizedServiceManager\Service\MappingService;
+use Reinfi\OptimizedServiceManager\Service\TryAutowiringService;
 
 /**
  * @package Reinfi\DependencyInjection\Service\Optimizer\Factory
@@ -20,11 +20,10 @@ class MappingServiceFactory
     {
         $config = $container->get('config');
 
-        /** @var AutoWiringService $autowiringService */
-        $autowiringService = $container->get(AutoWiringService::class);
+        /** @var TryAutowiringService $autowiringService */
+        $autowiringService = $container->get(TryAutowiringService::class);
 
         return new MappingService(
-            $container,
             $config['service_manager'],
             $autowiringService
         );

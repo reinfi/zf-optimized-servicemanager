@@ -9,9 +9,13 @@ return [
             \Reinfi\OptimizedServiceManager\Service\Service5::class           => \Reinfi\DependencyInjection\Factory\AutoWiringFactory::class,
             \Reinfi\OptimizedServiceManager\Service\ServiceDelegator::class   => \Zend\ServiceManager\Factory\InvokableFactory::class,
             \Reinfi\OptimizedServiceManager\Service\ServiceTryAutowire::class => function (
-                $container
+                \Psr\Container\ContainerInterface $container
             ) {
-                return new \Reinfi\OptimizedServiceManager\Service\ServiceClosure();
+                return new \Reinfi\OptimizedServiceManager\Service\ServiceTryAutowire(
+                    $container->get(\Reinfi\OptimizedServiceManager\Service\Service1::class),
+                    $container->get(\Reinfi\OptimizedServiceManager\Service\Service2::class),
+                    $container->get(\Reinfi\OptimizedServiceManager\Service\Service4::class)
+                );
             },
             \Reinfi\OptimizedServiceManager\Service\ServiceClosure::class     => function (
                 $container

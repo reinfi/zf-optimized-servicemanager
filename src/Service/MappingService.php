@@ -2,11 +2,8 @@
 
 namespace Reinfi\OptimizedServiceManager\Service;
 
-use Psr\Container\ContainerInterface;
-use Reinfi\DependencyInjection\Exception\AutoWiringNotPossibleException;
 use Reinfi\DependencyInjection\Factory\AutoWiringFactory;
 use Reinfi\DependencyInjection\Factory\InjectionFactory;
-use Reinfi\DependencyInjection\Service\AutoWiringService;
 use Reinfi\OptimizedServiceManager\Types\AutoWire;
 use Reinfi\OptimizedServiceManager\Types\Closure;
 use Reinfi\OptimizedServiceManager\Types\Delegator;
@@ -22,31 +19,23 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 class MappingService
 {
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * @var array
      */
     private $serviceManagerConfig;
 
     /**
-     * @var AutoWiringService
+     * @var TryAutowiringService
      */
     private $autoWiringService;
 
     /**
-     * @param ContainerInterface $container
-     * @param array              $serviceManagerConfig
-     * @param AutoWiringService  $autoWiringService
+     * @param array                $serviceManagerConfig
+     * @param TryAutowiringService $autoWiringService
      */
     public function __construct(
-        ContainerInterface $container,
         array $serviceManagerConfig,
-        AutoWiringService $autoWiringService
+        TryAutowiringService $autoWiringService
     ) {
-        $this->container = $container;
         $this->serviceManagerConfig = $serviceManagerConfig;
         $this->autoWiringService = $autoWiringService;
     }
@@ -96,23 +85,12 @@ class MappingService
             }
 
             if ($options->isTryAutowire() && class_exists($className)) {
-                try {
-                    $injections = $this->autoWiringService->resolveConstructorInjection(
-                        $this->container,
-                        $className
-                    );
+                $type = $this->autoWiringService->tryAutowiring($className);
 
-                    if ($injections === false) {
-                        $mappings[$className] = new Invokable($className);
-
-                        continue;
-                    }
-
-                    $mappings[$className] = new AutoWire($className);
+                if ($type instanceof TypeInterface) {
+                    $mappings[$className] = $type;
 
                     continue;
-                } catch (\Throwable $e) {
-                    // just resolve it as a factory if any exception occurs.
                 }
             }
 
