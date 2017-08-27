@@ -59,8 +59,9 @@ class GenerateController extends AbstractConsoleController
         $params = $this->params()->fromRoute();
 
         return new Options([
-            'withInitializers'  => $params['with-initializers'] !== false,
-            'canonicalizeNames' => $params['canonicalize-names'] !== false,
+            'withInitializers'  => $params['with-initializers'] ?? false !== false,
+            'canonicalizeNames' => $params['canonicalize-names'] ?? false !== false,
+            'tryAutowire'       => $params['try-autowire'] ?? false !== false,
         ]);
     }
 

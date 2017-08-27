@@ -75,7 +75,7 @@ class OptimizerService implements OptimizerServiceInterface
 
         $this->serviceManagerConfigService->addServiceConfig($class, $options);
 
-        $injectionMapping = $this->mappingService->buildMappings();
+        $injectionMapping = $this->mappingService->buildMappings($options);
         $instantiationMethods = $this->typeHandlerService->resolveTypes($injectionMapping);
         $methodMapping = $this->addMethods($class, $instantiationMethods);
         $this->addMappingProperty($class, $methodMapping);

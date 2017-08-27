@@ -18,6 +18,8 @@ Generate an optimized service manager for zend framework.
     return [
         'modules' => [
             'Reinfi\OptimizedServiceManager',
+            # you need both modules to optimize the service manager
+            'Reinfi\DependencyInjection',
             // other modules
         ],
     ];
@@ -32,6 +34,8 @@ Generate an optimized service manager for zend framework.
   --with-initializers : generate initializers if you still use them (they are deprecated)
   
   --canonicalize-names : also add canonicalized names to service manager
+
+  --try-autowire : try autowiring during generation of service manager
 
 
 ### FAQ

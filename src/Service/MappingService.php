@@ -2,9 +2,13 @@
 
 namespace Reinfi\OptimizedServiceManager\Service;
 
+use Psr\Container\ContainerInterface;
+use Reinfi\DependencyInjection\Exception\AutoWiringNotPossibleException;
 use Reinfi\DependencyInjection\Factory\AutoWiringFactory;
 use Reinfi\DependencyInjection\Factory\InjectionFactory;
+use Reinfi\DependencyInjection\Service\AutoWiringService;
 use Reinfi\OptimizedServiceManager\Types\AutoWire;
+use Reinfi\OptimizedServiceManager\Types\Closure;
 use Reinfi\OptimizedServiceManager\Types\Delegator;
 use Reinfi\OptimizedServiceManager\Types\Factory;
 use Reinfi\OptimizedServiceManager\Types\Injection;
@@ -18,23 +22,41 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 class MappingService
 {
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
      * @var array
      */
     private $serviceManagerConfig;
 
     /**
-     * @param array $serviceManagerConfig
+     * @var AutoWiringService
+     */
+    private $autoWiringService;
+
+    /**
+     * @param ContainerInterface $container
+     * @param array              $serviceManagerConfig
+     * @param AutoWiringService  $autoWiringService
      */
     public function __construct(
-        array $serviceManagerConfig
+        ContainerInterface $container,
+        array $serviceManagerConfig,
+        AutoWiringService $autoWiringService
     ) {
+        $this->container = $container;
         $this->serviceManagerConfig = $serviceManagerConfig;
+        $this->autoWiringService = $autoWiringService;
     }
 
     /**
-     * @return TypeInterface[]
+     * @param Options $options
+     *
+     * @return array
      */
-    public function buildMappings(): array
+    public function buildMappings(Options $options): array
     {
         $mappings = [];
 
@@ -52,6 +74,15 @@ class MappingService
                 continue;
             }
 
+            if (
+                $factoryClass === InvokableFactory::class
+                || $factoryClass === $className
+            ) {
+                $mappings[$className] = new Invokable($className);
+
+                continue;
+            }
+
             if ($factoryClass === AutoWiringFactory::class) {
                 $mappings[$className] = new AutoWire($className);
 
@@ -64,11 +95,29 @@ class MappingService
                 continue;
             }
 
-            if (
-                $factoryClass === InvokableFactory::class
-                || $factoryClass === $className
-            ) {
-                $mappings[$className] = new Invokable($className);
+            if ($options->isTryAutowire() && class_exists($className)) {
+                try {
+                    $injections = $this->autoWiringService->resolveConstructorInjection(
+                        $this->container,
+                        $className
+                    );
+
+                    if ($injections === false) {
+                        $mappings[$className] = new Invokable($className);
+
+                        continue;
+                    }
+
+                    $mappings[$className] = new AutoWire($className);
+
+                    continue;
+                } catch (AutoWiringNotPossibleException $e) {
+                    // just resolve it as a factory
+                }
+            }
+
+            if (is_callable($factoryClass)) {
+                $mappings[$className] = new Closure($className);
 
                 continue;
             }

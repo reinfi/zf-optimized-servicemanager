@@ -20,6 +20,11 @@ class Options extends AbstractOptions
     private $canonicalizeNames = false;
 
     /**
+     * @var bool
+     */
+    private $tryAutowire = false;
+
+    /**
      * @return bool
      */
     public function isWithInitializers(): bool
@@ -54,6 +59,26 @@ class Options extends AbstractOptions
     public function setCanonicalizeNames(bool $canonicalizeNames)
     {
         $this->canonicalizeNames = $canonicalizeNames;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTryAutowire(): bool
+    {
+        return $this->tryAutowire;
+    }
+
+    /**
+     * @param bool $tryAutowire
+     *
+     * @return Options
+     */
+    public function setTryAutowire($tryAutowire)
+    {
+        $this->tryAutowire = $tryAutowire;
 
         return $this;
     }
