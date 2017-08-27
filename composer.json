@@ -19,7 +19,7 @@
     "zendframework/zend-modulemanager": "~2.7",
     "zendframework/zend-mvc": "~2.7",
     "zendframework/zend-console": "~2.6",
-    "reinfi/zf-dependency-injection": "^1.0",
+    "reinfi/zf-dependency-injection": "~1.0",
     "nette/php-generator": "^3.0"
   },
   "autoload": {
