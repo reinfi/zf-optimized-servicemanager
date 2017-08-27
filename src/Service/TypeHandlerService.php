@@ -55,6 +55,10 @@ class TypeHandlerService
         $instantiationMethods = [];
 
         foreach ($typeMapping as $className => $type) {
+            if (!array_key_exists(get_class($type), static::$typeHandler)) {
+                continue;
+            }
+
             /** @var HandlerInterface $handler */
             $handler = $this->container->get(
                 static::$typeHandler[get_class($type)]
