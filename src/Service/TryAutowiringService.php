@@ -4,6 +4,7 @@ namespace Reinfi\OptimizedServiceManager\Service;
 
 use Psr\Container\ContainerInterface;
 use Reinfi\DependencyInjection\Exception\AutoWiringNotPossibleException;
+use Reinfi\DependencyInjection\Service\AutoWiring\ResolverService;
 use Reinfi\DependencyInjection\Service\AutoWiringService;
 use Reinfi\OptimizedServiceManager\Types\AutoWire;
 use Reinfi\OptimizedServiceManager\Types\Invokable;
@@ -20,18 +21,18 @@ class TryAutowiringService
     private $container;
 
     /**
-     * @var AutoWiringService
+     * @var ResolverService
      */
-    private $autoWiringService;
+    private $resolverService;
 
     /**
      * @param ContainerInterface|ServiceLocatorInterface $container
-     * @param AutoWiringService                          $autoWiringService
+     * @param ResolverService                            $resolverService
      */
-    public function __construct($container, AutoWiringService $autoWiringService
+    public function __construct($container, ResolverService $resolverService
     ) {
         $this->container = $container;
-        $this->autoWiringService = $autoWiringService;
+        $this->resolverService = $resolverService;
     }
 
     /**
@@ -42,13 +43,16 @@ class TryAutowiringService
     public function tryAutowiring(string $className)
     {
         try {
-            $injections = $this->autoWiringService->resolveConstructorInjection(
-                $this->container,
+            $injections = $this->resolverService->resolve(
                 $className
             );
 
-            if ($injections === false) {
+            if (count($injections) === 0) {
                 return new Invokable($className);
+            }
+
+            foreach ($injections as $index => $injection) {
+                $injections[$index] = $injection($this->container);
             }
 
             $this->checkInstanceEquality($className, $injections);

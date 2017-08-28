@@ -3,7 +3,7 @@
 namespace Reinfi\OptimizedServiceManager\Service\Factory;
 
 use Psr\Container\ContainerInterface;
-use Reinfi\DependencyInjection\Service\AutoWiringService;
+use Reinfi\DependencyInjection\Service\AutoWiring\ResolverService;
 use Reinfi\OptimizedServiceManager\Service\TryAutowiringService;
 
 /**
@@ -18,12 +18,12 @@ class TryAutowiringServiceFactory
      */
     public function __invoke(ContainerInterface $container): TryAutowiringService
     {
-        /** @var AutoWiringService $autowiringService */
-        $autowiringService = $container->get(AutoWiringService::class);
+        /** @var ResolverService $resolverService */
+        $resolverService = $container->get(ResolverService::class);
 
         return new TryAutowiringService(
             $container,
-            $autowiringService
+            $resolverService
         );
     }
 }
