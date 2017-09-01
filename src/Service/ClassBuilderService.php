@@ -84,16 +84,8 @@ class ClassBuilderService
         $getMethod->addParameter('usePeeringServiceManagers', true);
 
         $getMethod
-            ->addBody('try {')
-            ->addBody('  return $this->internalGet($name, $usePeeringServiceManagers);')
-            ->addBody('} catch(\Zend\ServiceManager\Exception\ServiceNotFoundException $e) {')
-            ->addBody('    $instance = $this->container->get($name, $usePeeringServiceManagers);')
-            ->addBody('')
-            ->addBody('    if (isset($this->shared[$name]) && $this->shared[$name]):')
-            ->addBody('        $this->instances[$name] = $instance;')
-            ->addBody('    endif;')
-            ->addBody('    return $instance;')
-            ->addBody('}');
+            ->addBody('return $this->internalGet($name, $usePeeringServiceManagers);');
+
 
         return $getMethod;
     }
