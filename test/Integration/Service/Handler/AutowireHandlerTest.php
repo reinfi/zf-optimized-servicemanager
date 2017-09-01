@@ -48,20 +48,6 @@ class AutowireHandlerTest extends AbstractIntegrationTest
             $method->getMethodBody(),
             'There should be four method body parts'
         );
-
-        $this->assertContains(
-            sprintf(
-                '$this->get(\'%s\'),', Service2::class
-            ),
-            $method->getMethodBody()
-        );
-
-        $this->assertContains(
-            sprintf(
-                '$this->get(\'%s\')', Service3::class
-            ),
-            $method->getMethodBody()
-        );
     }
 
     /**
@@ -89,14 +75,6 @@ class AutowireHandlerTest extends AbstractIntegrationTest
             3,
             $method->getMethodBody(),
             'There should be three method body parts'
-        );
-
-        $this->assertContains(
-            sprintf(
-                'parent::get(\'%s\')',
-                Service4::class
-            ),
-            $method->getMethodBody()
         );
     }
 
@@ -185,14 +163,6 @@ class AutowireHandlerTest extends AbstractIntegrationTest
             3,
             $method->getMethodBody(),
             'There should be three method body parts'
-        );
-
-        $this->assertContains(
-            sprintf(
-                'parent::get(\'%s\')',
-                Service2::class
-            ),
-            $method->getMethodBody()
         );
     }
 
