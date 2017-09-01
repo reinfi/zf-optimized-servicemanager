@@ -29,7 +29,6 @@ class ServiceManagerConfigService
         'Config'             => 'config',
         'Application'        => Application::class,
         'application'        => Application::class,
-        'SharedEventManager' => SharedEventManager::class,
     ];
 
     /**
