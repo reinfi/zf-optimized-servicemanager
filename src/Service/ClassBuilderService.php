@@ -5,7 +5,6 @@ namespace Reinfi\OptimizedServiceManager\Service;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
-use Zend\ModuleManager\Listener\ConfigListener;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -62,7 +61,6 @@ class ClassBuilderService
     public function addOverwriteMethods(ClassType $class, Options $options)
     {
         $this->addGetMethod($class, $options);
-        $this->addInteralGetMethod($class, $options);
         $this->addHasMethod($class);
         $this->overwriteCanonicalizeName($class, $options);
         $this->overwriteCanCreateFromAbstractFactory($class);
@@ -84,28 +82,6 @@ class ClassBuilderService
         $getMethod->addParameter('usePeeringServiceManagers', true);
 
         $getMethod
-            ->addBody('return $this->internalGet($name, $usePeeringServiceManagers);');
-
-
-        return $getMethod;
-    }
-
-    /**
-     * @param ClassType $class
-     * @param Options   $options
-     *
-     * @return Method
-     */
-    private function addInteralGetMethod(ClassType $class, Options $options): Method
-    {
-        $getMethod = $class->addMethod('internalGet')
-            ->setVisibility('protected')
-            ->addComment('@inheritdoc');
-
-        $getMethod->addParameter('name');
-        $getMethod->addParameter('usePeeringServiceManagers', true);
-
-        $getMethod
             ->addBody('$instance = null;')
             ->addBody('')
             ->addBody('if (isset($this->instances[$name])):')
@@ -113,7 +89,7 @@ class ClassBuilderService
             ->addBody('endif;')
             ->addBody('')
             ->addBody('if (isset($this->mappings[$name])):')
-            ->addBody('    $instance = call_user_func([$this, $this->mappings[$name]]);')
+            ->addBody('    $instance = $this->{$this->mappings[$name]}();')
             ->addBody('endif;')
             ->addBody('')
             ->addBody('if ($instance === null):')
