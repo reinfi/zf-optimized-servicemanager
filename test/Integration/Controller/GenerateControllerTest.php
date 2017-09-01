@@ -70,6 +70,35 @@ class GenerateControllerTest extends AbstractIntegrationTest
         );
     }
 
+
+    /**
+     * @test
+     */
+    public function itGeneratesServiceManagerWithAutowire()
+    {
+        $serviceManager = $this->getServiceManager(
+            require __DIR__ . '/../../resources/config.php'
+        );
+
+        $optimizerService = $serviceManager->get(OptimizerServiceInterface::class);
+
+        $controller = new GenerateController($optimizerService);
+
+        $event = new MvcEvent();
+        $event->setRouteMatch(new RouteMatch(['try-autowire' => true]));
+        $controller->setEvent($event);
+
+        $console = $this->prophesize(AdapterInterface::class);
+        $controller->setConsole($console->reveal());
+
+        $controller->indexAction();
+
+        $this->assertFileExists(
+            realpath(__DIR__ . '/../../../src/') . DIRECTORY_SEPARATOR  . OptimizerServiceInterface::SERVICE_MANAGER_FILENAME,
+            'File should exist at source root directory'
+        );
+    }
+
     /**
      * @inheritdoc
      */
@@ -80,7 +109,7 @@ class GenerateControllerTest extends AbstractIntegrationTest
         $filePath = realpath(__DIR__ . '/../../../src/') . DIRECTORY_SEPARATOR  . OptimizerServiceInterface::SERVICE_MANAGER_FILENAME;
 
         if (file_exists($filePath)) {
-            unlink($filePath);
+            #unlink($filePath);
         }
     }
 }

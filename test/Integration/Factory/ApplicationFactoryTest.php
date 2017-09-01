@@ -32,6 +32,8 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
      */
     public function itReplacesApplicationServiceManagerWithOptimizedManager()
     {
+        $this->markTestSkipped('Currently ApplicationFactory is not used anymore');
+
         $this->createOptimizedManager();
 
         $container = $this->prophesize(ServiceManager::class);
@@ -85,6 +87,8 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
      */
     public function itCreatesApplicationWithOptimizedManager()
     {
+        $this->markTestSkipped('Currently ApplicationFactory is not used anymore');
+
         $this->createOptimizedManager();
 
         $container = $this->prophesize(ServiceManager::class);
@@ -131,6 +135,8 @@ class ApplicationFactoryTest extends AbstractIntegrationTest
      */
     public function itReturnsCallbackInstanceIfOptimizedManagerNotExists()
     {
+        $this->markTestSkipped('Currently ApplicationFactory is not used anymore');
+
         $factory = new ApplicationFactory();
 
         $container = $this->prophesize(ServiceLocatorInterface::class);

@@ -41,40 +41,18 @@ class ClassBuilderService
      */
     public function addConstructor(ClassType $class)
     {
-        $class->addProperty('container')
-            ->setVisibility('private')
-            ->addComment('@var \\' . ServiceManager::class . ' $container');
-
         $constructor = $class
             ->addMethod('__construct')
-            ->setVisibility('public')
-            ->addComment('@var \\' . ServiceManager::class . ' $container');
-
-        $constructor->addParameter('container')
-            ->setTypeHint(ServiceManager::class);
-
-        $constructor->addParameter('configListener')
-            ->setTypeHint(ConfigListener::class)
-            ->setDefaultValue(null);
+            ->setVisibility('public');
 
         $constructor
             ->addBody('parent::__construct();')
-            ->addBody('$this->container = $container;')
-            ->addBody('')
-            ->addBody('$this->instances[\'servicelistener\'] = $container->get(\'servicelistener\');')
-            ->addBody('$this->instances[\'applicationconfig\'] = $container->get(\'applicationconfig\');')
-            ->addBody('')
-            ->addBody('if ($container->has(\'config\')):')
-            ->addBody('    $this->instances[\'config\'] = $container->get(\'config\');')
-            ->addBody('else:')
-            ->addBody('    $this->instances[\'config\'] = $configListener->getMergedConfig(false);')
-            ->addBody('endif;')
             ->addBody('')
             ->addBody('foreach ($this->registeredInitializers as $initializer):')
             ->addBody('    $this->addInitializer($initializer);')
             ->addBody('endforeach;')
             ->addBody('')
-            ->addBody('$container->setService(__CLASS__, $this);');
+            ->addBody('$this->setService(\'' . ServiceManager::class . '\', $this);');
     }
 
     /**

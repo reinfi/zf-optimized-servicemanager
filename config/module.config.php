@@ -24,11 +24,6 @@ return [
             \Reinfi\DependencyInjection\Service\AutoWiring\Resolver\ContainerInterfaceResolver::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
             \Reinfi\DependencyInjection\Service\AutoWiring\Resolver\PluginManagerResolver::class      => \Reinfi\DependencyInjection\Service\AutoWiring\Resolver\Factory\PluginManagerResolverFactory::class,
         ],
-        'delegators' => [
-            'Application' => [
-                \Reinfi\OptimizedServiceManager\DelegatorFactory\ApplicationFactory::class,
-            ],
-        ],
     ],
     'console'         => [
         'router' => [
