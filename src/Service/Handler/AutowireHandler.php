@@ -93,12 +93,16 @@ class AutowireHandler extends AbstractHandler
         // If service is created via abstract factory we need to get it from underlying container.
         if ($this->container->canCreateFromAbstractFactory($serviceName, $serviceName)) {
             return sprintf(
-                'parent::get(\'%s\')', $serviceName
+                '$this->instances[\'%s\'] ?? parent::get(\'%s\')',
+                $serviceName,
+                $serviceName
             );
         }
 
         return sprintf(
-            '$this->get(\'%s\')', $serviceName
+            '$this->instances[\'%s\'] ?? $this->get(\'%s\')',
+            $serviceName,
+            $serviceName
         );
     }
 
@@ -140,7 +144,9 @@ class AutowireHandler extends AbstractHandler
         $instance = $injection($this->container);
 
         return sprintf(
-            'parent::get(\'%s\')', get_class($instance)
+            '$this->instances[\'%s\'] ?? parent::get(\'%s\')',
+            get_class($instance),
+            get_class($instance)
         );
     }
 }
