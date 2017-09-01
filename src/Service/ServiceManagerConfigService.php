@@ -7,8 +7,6 @@ use Nette\PhpGenerator\Property;
 use Reinfi\OptimizedServiceManager\Manager\Initializer\EventManagerAwareInitializer;
 use Reinfi\OptimizedServiceManager\Manager\Initializer\ServiceLocatorAwareInitializer;
 use Reinfi\OptimizedServiceManager\Manager\Initializer\ServiceManagerAwareInitializer;
-use Zend\EventManager\SharedEventManager;
-use Zend\Mvc\Application;
 use Zend\Mvc\Service\ServiceListenerFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 
@@ -26,9 +24,7 @@ class ServiceManagerConfigService
      * @var array
      */
     const DEFAULT_ALIASES = [
-        'Config'             => 'config',
-        'Application'        => Application::class,
-        'application'        => Application::class,
+        'Config' => 'config',
     ];
 
     /**

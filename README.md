@@ -18,8 +18,6 @@ Generate an optimized service manager for zend framework.
     return [
         'modules' => [
             'Reinfi\OptimizedServiceManager',
-            # you need both modules to optimize the service manager
-            'Reinfi\DependencyInjection',
             // other modules
         ],
     ];
