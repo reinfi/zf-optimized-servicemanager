@@ -132,6 +132,14 @@ class OptimizerService implements OptimizerServiceInterface
             $methodMapping[$instantiationMethod->getClassName()] = $method->getName();
         }
 
+        $aliases = $class->getProperty('aliases')->getValue();
+
+        foreach ($aliases as $alias => $resolvedAlias) {
+            if (isset($methodMapping[$resolvedAlias])) {
+                $methodMapping[$alias] = $methodMapping[$resolvedAlias];
+            }
+        }
+
         return $methodMapping;
     }
 
