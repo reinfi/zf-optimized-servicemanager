@@ -100,12 +100,14 @@ class OptimizerService implements OptimizerServiceInterface
     /**
      * @param ClassType             $class
      * @param InstantiationMethod[] $instantiationMethods
+     * @param Options               $options
      *
      * @return array
      */
     protected function addMethods(
         ClassType $class,
-        array $instantiationMethods
+        array $instantiationMethods,
+        Options $options
     ): array {
         $methodMapping = [];
 
@@ -135,8 +137,21 @@ class OptimizerService implements OptimizerServiceInterface
         $aliases = $class->getProperty('aliases')->getValue();
 
         foreach ($aliases as $alias => $resolvedAlias) {
-            if (isset($methodMapping[$resolvedAlias])) {
+            if (
+                isset($methodMapping[$resolvedAlias])
+                && !isset($methodMapping[$alias])
+            ) {
                 $methodMapping[$alias] = $methodMapping[$resolvedAlias];
+            }
+        }
+
+        if ($options->isCanonicalizeNames()) {
+            foreach ($methodMapping as $service => $method) {
+                $canonicalizedName = strtolower(strtr($service, ServiceManagerConfigService::CANONICAL_NAMES_REPLACEMENTS));
+
+                if (!isset($methodMapping[$canonicalizedName])) {
+                    $methodMapping[$canonicalizedName] = $method;
+                }
             }
         }
 
