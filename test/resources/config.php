@@ -12,15 +12,27 @@ return [
                 \Psr\Container\ContainerInterface $container
             ) {
                 return new \Reinfi\OptimizedServiceManager\Service\ServiceTryAutowire(
-                    $container->get(\Reinfi\OptimizedServiceManager\Service\Service1::class),
-                    $container->get(\Reinfi\OptimizedServiceManager\Service\Service2::class),
-                    $container->get(\Reinfi\OptimizedServiceManager\Service\Service4::class)
+                    $container->get(
+                        \Reinfi\OptimizedServiceManager\Service\Service1::class
+                    ),
+                    $container->get(
+                        \Reinfi\OptimizedServiceManager\Service\Service2::class
+                    ),
+                    $container->get(
+                        \Reinfi\OptimizedServiceManager\Service\Service4::class
+                    )
                 );
             },
             \Reinfi\OptimizedServiceManager\Service\ServiceClosure::class     => function (
                 $container
             ) {
-                return new \Reinfi\OptimizedServiceManager\Service\ServiceClosure();
+                return new \Reinfi\OptimizedServiceManager\Service\ServiceClosure(
+                );
+            },
+            'ServiceClosureNative'                                            => function (
+                \Psr\Container\ContainerInterface $container
+            ) {
+                return new \Reinfi\OptimizedServiceManager\Service\ServiceClosureNative(1);
             },
         ],
         'delegators'         => [

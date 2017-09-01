@@ -109,7 +109,7 @@ class GenerateControllerTest extends AbstractIntegrationTest
         $filePath = realpath(__DIR__ . '/../../../src/') . DIRECTORY_SEPARATOR  . OptimizerServiceInterface::SERVICE_MANAGER_FILENAME;
 
         if (file_exists($filePath)) {
-            #unlink($filePath);
+            unlink($filePath);
         }
     }
 }

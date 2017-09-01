@@ -95,7 +95,10 @@ class MappingService
             }
 
             if (is_callable($factoryClass)) {
-                $mappings[$className] = new Closure($className);
+                $mappings[$className] = new Closure(
+                    $className,
+                    $factoryClass
+                );
 
                 continue;
             }

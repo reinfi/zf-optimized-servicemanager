@@ -3,13 +3,15 @@
 namespace Reinfi\OptimizedServiceManager\Service;
 
 use Psr\Container\ContainerInterface;
-use Reinfi\OptimizedServiceManager\Service\Handler\HandlerInterface;
 use Reinfi\OptimizedServiceManager\Model\InstantiationMethod;
 use Reinfi\OptimizedServiceManager\Service\Handler\AutowireHandler;
+use Reinfi\OptimizedServiceManager\Service\Handler\ClosureHandler;
 use Reinfi\OptimizedServiceManager\Service\Handler\DelegatorHandler;
 use Reinfi\OptimizedServiceManager\Service\Handler\FactoryHandler;
+use Reinfi\OptimizedServiceManager\Service\Handler\HandlerInterface;
 use Reinfi\OptimizedServiceManager\Service\Handler\InvokableHandler;
 use Reinfi\OptimizedServiceManager\Types\AutoWire;
+use Reinfi\OptimizedServiceManager\Types\Closure;
 use Reinfi\OptimizedServiceManager\Types\Delegator;
 use Reinfi\OptimizedServiceManager\Types\Factory;
 use Reinfi\OptimizedServiceManager\Types\Injection;
@@ -35,6 +37,7 @@ class TypeHandlerService
         Factory::class   => FactoryHandler::class,
         Injection::class => FactoryHandler::class,
         AutoWire::class  => AutowireHandler::class,
+        Closure::class   => ClosureHandler::class,
     ];
 
     /**

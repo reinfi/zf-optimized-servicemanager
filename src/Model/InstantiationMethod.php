@@ -46,6 +46,18 @@ class InstantiationMethod
     }
 
     /**
+     * @param string $className
+     *
+     * @return InstantiationMethod
+     */
+    public function setClassName($className)
+    {
+        $this->className = $className;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getMethodBody(): array

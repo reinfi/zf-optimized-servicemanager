@@ -112,10 +112,6 @@ class OptimizerService implements OptimizerServiceInterface
         $methodMapping = [];
 
         foreach ($instantiationMethods as $instantiationMethod) {
-            if (!class_exists($instantiationMethod->getClassName())) {
-                continue;
-            }
-
             $method = $class->addMethod(
                 sprintf(
                     'get%s',
@@ -124,8 +120,11 @@ class OptimizerService implements OptimizerServiceInterface
             );
 
             $method
-                ->setVisibility('protected')
-                ->addComment('@return \\' . $instantiationMethod->getClassName() . '|object');
+                ->setVisibility('protected');
+
+            if (class_exists($instantiationMethod->getClassName())) {
+                $method->addComment('@return \\' . $instantiationMethod->getClassName() . '|object');
+            }
 
             foreach ($instantiationMethod->getMethodBody() as $bodyPart) {
                 $method->addBody($bodyPart);

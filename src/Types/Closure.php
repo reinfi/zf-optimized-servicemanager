@@ -10,14 +10,21 @@ class Closure implements TypeInterface
     /**
      * @var string
      */
-    private $className;
+    private $serviceName;
 
     /**
-     * @param string $className
+     * @var callable
      */
-    public function __construct(string $className)
+    private $callable;
+
+    /**
+     * @param string   $className
+     * @param callable $callable
+     */
+    public function __construct(string $className, callable $callable)
     {
-        $this->className = $className;
+        $this->serviceName = $className;
+        $this->callable = $callable;
     }
 
     /**
@@ -25,7 +32,14 @@ class Closure implements TypeInterface
      */
     public function getService(): string
     {
-        return $this->className;
+        return $this->serviceName;
     }
 
+    /**
+     * @return callable
+     */
+    public function getCallable(): callable
+    {
+        return $this->callable;
+    }
 }

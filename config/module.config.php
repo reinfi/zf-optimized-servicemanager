@@ -2,10 +2,10 @@
 
 return [
     'service_manager' => [
-        'aliases'    => [
+        'aliases'   => [
             \Reinfi\OptimizedServiceManager\Service\OptimizerServiceInterface::class => \Reinfi\OptimizedServiceManager\Service\OptimizerService::class,
         ],
-        'factories'  => [
+        'factories' => [
             \Reinfi\OptimizedServiceManager\Service\OptimizerService::class                           => \Reinfi\OptimizedServiceManager\Service\Factory\OptimizerServiceFactory::class,
             \Reinfi\OptimizedServiceManager\Service\MappingService::class                             => \Reinfi\OptimizedServiceManager\Service\Factory\MappingServiceFactory::class,
             \Reinfi\OptimizedServiceManager\Service\ClassBuilderService::class                        => \Reinfi\OptimizedServiceManager\Service\Factory\ClassBuilderServiceFactory::class,
@@ -16,12 +16,13 @@ return [
             \Reinfi\OptimizedServiceManager\Service\Handler\DelegatorHandler::class                   => \Zend\ServiceManager\Factory\InvokableFactory::class,
             \Reinfi\OptimizedServiceManager\Service\Handler\FactoryHandler::class                     => \Zend\ServiceManager\Factory\InvokableFactory::class,
             \Reinfi\OptimizedServiceManager\Service\Handler\InvokableHandler::class                   => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            \Reinfi\OptimizedServiceManager\Service\Handler\ClosureHandler::class                     => \Reinfi\OptimizedServiceManager\Service\Handler\Factory\ClosureHandlerFactory::class,
 
             // Required because of AbstractFactories requesting config class at a none existing point.
-            'ServiceListenerInterface' => \Reinfi\OptimizedServiceManager\Mvc\Service\Factory\ServiceListenerFactory::class,
+            'ServiceListenerInterface'                                                                => \Reinfi\OptimizedServiceManager\Mvc\Service\Factory\ServiceListenerFactory::class,
 
             // Required because shared event manager is build by a closure at this point.
-            'SharedEventManager' => \Reinfi\OptimizedServiceManager\Mvc\Service\Factory\SharedEventManagerFactory::class,
+            'SharedEventManager'                                                                      => \Reinfi\OptimizedServiceManager\Mvc\Service\Factory\SharedEventManagerFactory::class,
 
             // Avoid need to explicitly add di module to application
             \Reinfi\DependencyInjection\Config\ModuleConfig::class                                    => \Reinfi\DependencyInjection\Config\Factory\ModuleConfigFactory::class,
