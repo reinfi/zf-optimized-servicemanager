@@ -17,6 +17,9 @@ return [
             \Reinfi\OptimizedServiceManager\Service\Handler\FactoryHandler::class                     => \Zend\ServiceManager\Factory\InvokableFactory::class,
             \Reinfi\OptimizedServiceManager\Service\Handler\InvokableHandler::class                   => \Zend\ServiceManager\Factory\InvokableFactory::class,
 
+            // Required because of AbstractFactories requesting config class at a none existing point.
+            'ServiceListenerInterface' => \Reinfi\OptimizedServiceManager\Mvc\Service\Factory\ServiceListenerFactory::class,
+
             // Avoid need to explicitly add di module to application
             \Reinfi\DependencyInjection\Config\ModuleConfig::class                                    => \Reinfi\DependencyInjection\Config\Factory\ModuleConfigFactory::class,
             \Reinfi\DependencyInjection\Service\AutoWiring\ResolverService::class                     => \Reinfi\DependencyInjection\Service\AutoWiring\Factory\ResolverServiceFactory::class,
