@@ -47,10 +47,12 @@ class Module implements ConfigProviderInterface, InitProviderInterface
 
         $managerClass = OptimizerServiceInterface::SERVICE_MANAGER_FQCN;
         if ($container instanceof $managerClass) {
-            $container->setService(
-                'config',
-                $event->getConfigListener()->getMergedConfig(false)
-            );
+            $container
+                ->setAllowOverride(true)
+                ->setService(
+                    'config',
+                    $event->getConfigListener()->getMergedConfig(false)
+                );
         }
     }
 }
