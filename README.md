@@ -23,6 +23,9 @@ Generate an optimized service manager for zend framework.
     ];
 ```
 
+3. Change Application class within index.php to Reinfi\OptimizedServiceManager\Mvc\Application`
+4. Use console command to generate optimized service manager.
+
 ### Console commands
 * Generate servicemanager: `php public/index.php reinfi:optimize service-manager`
   Generates an optimized service manager based on your current configuration.
