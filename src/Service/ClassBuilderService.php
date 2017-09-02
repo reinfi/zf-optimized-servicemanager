@@ -64,6 +64,8 @@ class ClassBuilderService
         $this->addHasMethod($class);
         $this->overwriteCanonicalizeName($class, $options);
         $this->overwriteCanCreateFromAbstractFactory($class);
+        $this->overwriteSetFactory($class);
+        $this->overwriteSetInvokableClass($class);
     }
 
     /**
@@ -200,6 +202,64 @@ class ClassBuilderService
             ->addBody('endif;')
             ->addBody('')
             ->addBody('return parent::canCreateFromAbstractFactory($cName, $rName);');
+
+        return $method;
+    }
+
+    /**
+     * @param ClassType $class
+     *
+     * @return Method
+     */
+    private function overwriteSetFactory(ClassType $class): Method
+    {
+        $method = $class->addMethod('setFactory')
+            ->setVisibility('public')
+            ->addComment('@inheritdoc');
+
+        $method->addParameter('name');
+        $method->addParameter('factory');
+        $method->addParameter('shared')->setDefaultValue(null);
+
+        $method
+            ->addBody('if (isset($this->mapping[$name])):')
+            ->addBody('    return $this;')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody('if (isset($this->factories[$name])):')
+            ->addBody('    return $this;')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody('return parent::setFactory($name, $factory, $shared);');
+
+        return $method;
+    }
+
+    /**
+     * @param ClassType $class
+     *
+     * @return Method
+     */
+    private function overwriteSetInvokableClass(ClassType $class): Method
+    {
+        $method = $class->addMethod('setInvokableClass')
+            ->setVisibility('public')
+            ->addComment('@inheritdoc');
+
+        $method->addParameter('name');
+        $method->addParameter('invokableClass');
+        $method->addParameter('shared')->setDefaultValue(null);
+
+        $method
+            ->addBody('if (isset($this->mapping[$name])):')
+            ->addBody('    return $this;')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody('if (isset($this->invokables[$name])):')
+            ->addBody('    return $this;')
+            ->addBody('endif;')
+            ->addBody('')
+            ->addBody('return parent::setInvokableClass($name, $invokableClass, $shared);');
 
         return $method;
     }
