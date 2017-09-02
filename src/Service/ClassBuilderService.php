@@ -222,7 +222,7 @@ class ClassBuilderService
         $method->addParameter('shared')->setDefaultValue(null);
 
         $method
-            ->addBody('if (isset($this->mapping[$name])):')
+            ->addBody('if (isset($this->mappings[$name])):')
             ->addBody('    return $this;')
             ->addBody('endif;')
             ->addBody('')
@@ -251,7 +251,7 @@ class ClassBuilderService
         $method->addParameter('shared')->setDefaultValue(null);
 
         $method
-            ->addBody('if (isset($this->mapping[$name])):')
+            ->addBody('if (isset($this->mappings[$name])):')
             ->addBody('    return $this;')
             ->addBody('endif;')
             ->addBody('')
