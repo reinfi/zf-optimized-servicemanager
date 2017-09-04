@@ -42,6 +42,10 @@ class TryAutowiringService
      */
     public function tryAutowiring(string $className)
     {
+        if ($this->validForAutoWiring($className) === false) {
+            return null;
+        }
+
         try {
             $injections = $this->resolverService->resolve(
                 $className
@@ -63,6 +67,34 @@ class TryAutowiringService
         }
     }
 
+    /**
+     * @param string $className
+     *
+     * @return bool
+     */
+    private function validForAutoWiring(string $className): bool
+    {
+        if (!class_exists($className)) {
+            return false;
+        }
+
+        $reflCass = new \ReflectionClass($className);
+
+        if ($reflCass->isAbstract()) {
+            return false;
+        }
+
+        $constructor = $reflCass->getConstructor();
+
+        if ($constructor === null) {
+            return true;
+        }
+
+        return (
+            $constructor->isPublic()
+            && !$constructor->isAbstract()
+        );
+    }
     /**
      * @param string $className
      * @param array  $injections
