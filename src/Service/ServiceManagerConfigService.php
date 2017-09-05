@@ -94,7 +94,7 @@ class ServiceManagerConfigService
      */
     private function addInvokables(ClassType $class, Options $options): Property
     {
-        $services = $this->getConfigServices('invokables');
+        $services = $this->getConfigServices('invokableClasses');
         $services = $this->removeClosures($services);
         $services = $this->prepareNames($options, $services);
 
