@@ -94,12 +94,12 @@ class ServiceManagerConfigService
      */
     private function addInvokables(ClassType $class, Options $options): Property
     {
-        $services = $this->getConfigServices('invokableClasses');
+        $services = $this->getConfigServices('invokables');
         $services = $this->removeClosures($services);
         $services = $this->prepareNames($options, $services);
 
         return $class
-            ->addProperty('invokables', $services)
+            ->addProperty('invokableClasses', $services)
             ->setVisibility('protected');
     }
 
